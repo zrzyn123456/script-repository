@@ -1,0 +1,84 @@
+name: Deploy Static Files with JSON Index
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Generate file list
+        run: |
+          # 创建生成文件列表的脚本
+          cat > generate-file-list.js << 'EOF'
+          const fs = require('fs').promises;
+          const path = require('path');
+          
+          async function listAll(src) {
+            const res = [];
+            
+            async function listAllInner(src) {
+              if (src.endsWith('.')) return;
+              
+              try {
+                const stat = await fs.stat(src);
+                if (stat.isDirectory()) {
+                  const files = await fs.readdir(src);
+                  for (const file of files) {
+                    await listAllInner(path.join(src, file));
+                  }
+                } else {
+                  // 只保存相对路径
+                  res.push('/' + src.replace(/\\/g, '/'));
+                }
+              } catch (e) {
+                // 文件不存在，跳过
+              }
+            }
+            
+            await listAllInner(src);
+            return res;
+          }
+          
+          async function main() {
+            const staticPaths = ['assets', 'dist', 'project.json'];
+            let allFiles = [];
+            
+            for (const item of staticPaths) {
+              const files = await listAll(item);
+              allFiles = [...allFiles, ...files];
+            }
+            
+            // 直接将JSON内容写入index.html
+            const jsonContent = JSON.stringify(allFiles);
+            await fs.writeFile('index.html', jsonContent);
+            
+            console.log('文件列表生成完成，共' + allFiles.length + '个文件');
+          }
+          
+          main().catch(console.error);
+          EOF
+          
+          # 执行脚本生成文件列表
+          node generate-file-list.js
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          exclude_assets: '.github,node_modules,**.md,**.js'
