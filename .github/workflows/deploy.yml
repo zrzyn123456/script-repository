@@ -2,7 +2,9 @@ name: Deploy Static Files with JSON Index
 
 on:
   push:
-    branches: ["main"]
+    tags:
+      - 'v*'
+      - 'V*'
   workflow_dispatch:
 
 permissions:
@@ -74,6 +76,19 @@ jobs:
           
           # 执行脚本生成文件列表
           node generate-file-list.js
+
+      - name: Create version file
+        run: |
+          # 获取当前标签或提交哈希值
+          TAG_NAME=""
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+          else
+            TAG_NAME=$(git rev-parse --short HEAD)
+          fi
+          
+          # 创建version文件
+          echo $TAG_NAME > version
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
