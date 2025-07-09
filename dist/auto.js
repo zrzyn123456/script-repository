@@ -19883,6 +19883,11 @@ var Func002 = /** @class */ (function () {
                         type: 'switch',
                         default: false,
                     }, {
+                        name: 'snake_skin_detection',
+                        desc: '蛇皮检测开关',
+                        type: 'switch',
+                        default: false,
+                    }, {
                         name: 'watch_small',
                         desc: '只打满小',
                         type: 'switch',
@@ -20110,6 +20115,33 @@ var Func002 = /** @class */ (function () {
                     [center, 1280, 720, 1206, 37, 1240, 74, 2000], //点击关闭
                 ]
             },
+            {
+                //21 茶几活动提前结算
+                desc: [
+                    1280, 720,
+                    [
+                        [center, 861, 224, 0x694735],
+                        [center, 433, 221, 0x593c2e],
+                        [center, 427, 492, 0x513728],
+                        [center, 870, 493, 0x593c2d],
+                        [center, 840, 454, 0x983d2e],
+                        [center, 683, 454, 0x9b412e],
+                        [center, 534, 447, 0xdf6851],
+                        [center, 685, 403, 0xd47f31],
+                        [center, 814, 388, 0xc8b39a],
+                        [center, 455, 373, 0x595046],
+                        [center, 456, 387, 0x564e43],
+                        [center, 451, 386, 0x5c5348],
+                        [center, 464, 386, 0x60574b],
+                        [center, 820, 385, 0x574e44],
+                        [center, 758, 381, 0x574f44],
+                        [center, 647, 378, 0x60574b],
+                    ]
+                ],
+                oper: [
+                    [center, 1280, 720, 674, 403, 841, 456, 2000], //点击结算
+                ]
+            },
         ];
     }
     Func002.prototype.operatorFunc = function (thisScript, thisOperator) {
@@ -20127,10 +20159,21 @@ var Func002 = /** @class */ (function () {
             sleep(500);
         }
         var thisconf = thisScript.scheme.config['2'];
+        if (thisconf && thisconf.snake_skin_detection) {
+            var snake_skin = thisScript.findMultiColor('紫色蛇皮');
+            if (snake_skin) {
+                sleep(5000);
+                thisScript.regionClick([[1224, 144, 1275, 638, 1000]]);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
         if (thisScript.oper({
             id: 2,
             name: '活动干扰',
-            operator: [thisOperator[18], thisOperator[19], thisOperator[20]]
+            operator: [thisOperator[18], thisOperator[19], thisOperator[20], thisOperator[21]]
         })) {
             return true;
         }
@@ -21696,6 +21739,24 @@ var Func010 = /** @class */ (function () {
                 oper: [
                     [center, 1280, 720, 1036, 133, 1065, 158, 500]
                 ]
+            },
+            {
+                desc: [
+                    1280, 720,
+                    [
+                        [right, 1201, 131, 0xe9d7d1],
+                        [right, 1114, 97, 0x3f2b20],
+                        [left, 305, 81, 0x3f3d44],
+                        [left, 128, 87, 0x39373e],
+                        [right, 1244, 277, 0x895020],
+                        [right, 1247, 387, 0x523523],
+                        [right, 1245, 438, 0x553623],
+                        [right, 1225, 622, 0xe9dab7],
+                    ]
+                ],
+                oper: [
+                    [center, 1280, 720, 1210, 366, 1254, 453, 1500]
+                ]
             }];
     }
     Func010.prototype.operatorFunc = function (thisScript, thisOperator) {
@@ -21714,16 +21775,13 @@ var Func010 = /** @class */ (function () {
         if ('个人突破' === thisconf.type) {
             return thisScript.oper({
                 name: '地图进入个人突破',
-                operator: [{
-                        desc: thisOperator[0].desc,
-                        oper: [thisOperator[0].oper[0]]
-                    }, thisOperator[1]]
+                operator: [thisOperator[1]]
             });
         }
         else if ('寮突破' === thisconf.type) {
             return thisScript.oper({
                 name: '地图进入寮突破',
-                operator: thisOperator
+                operator: [thisOperator[2], thisOperator[1]]
             });
         }
         return false;
@@ -30117,7 +30175,15 @@ var member = {
     company_name: Date.now().toString().substr(-5),
     member_id: '',
     company_id: '',
-    company_created: false
+    company_created: false,
+    tongxin_role: 1,
+    tongxin_name: '风早屋',
+    all_members_added: true,
+    friends_list: [
+        '侘寂羽见薄幸',
+        '锦缎琉璃坊'
+    ],
+    friend_apply: false
 }; // 当前执行角色
 var operator = [];
 var taskList = [
@@ -30141,206 +30207,209 @@ var taskList = [
     // // ==============================
     // '领成就',
     // '返回庭院',
+    // // // ==============================
+    // '检测阴阳寮',
+    // // ===========获取座敷方便后续配阵容==========
+    // '领成就',
+    // '返回庭院',
     // // ==============================
-    '检测阴阳寮',
-    // ===========获取座敷方便后续配阵容==========
-    '领成就',
-    '返回庭院',
-    // ==============================
-    '庭院进入探索地图',
-    '返回庭院',
-    // ==============================
-    '领平安京密卷',
-    '返回庭院',
-    // ==============================
-    '进入式神录',
-    '升级座敷',
-    '返回式神录',
-    '返回庭院',
-    '进入式神录',
-    '升级姑获鸟',
-    '返回式神录',
-    '返回庭院',
-    // =============================
-    '进入式神录',
-    '创建队伍',
-    '返回式神录',
-    '返回庭院',
-    // =============================
-    '进入式神录',
-    '姑获鸟装御魂',
-    '返回式神录',
-    '返回庭院',
-    '进入式神录',
-    '座敷装御魂',
-    '返回式神录',
-    '返回庭院',
-    // =============================
-    '进入式神录',
-    '莹草觉醒',
-    '返回式神录',
-    '返回庭院',
-    '进入式神录',
-    '座敷觉醒',
-    '返回式神录',
-    '返回庭院',
-    // ==========领第二套针女御魂给雪女============
-    '领成长奖励',
-    '返回庭院',
-    // =============================
-    '进入式神录',
-    '雪女装御魂',
-    '返回式神录',
-    '返回庭院',
-    // =============================
-    '进入式神录',
-    '觉醒座敷升级',
-    '返回式神录',
-    '返回庭院',
+    // '庭院进入探索地图',
+    // '返回庭院',
+    // // ==============================
+    // '领平安京密卷',
+    // '返回庭院',
+    // // ==============================
+    // '进入式神录',
+    // '升级座敷',
+    // '返回式神录',
+    // '返回庭院',
+    // '进入式神录',
+    // '升级姑获鸟',
+    // '返回式神录',
+    // '返回庭院',
     // // =============================
+    // '进入式神录',
+    // '创建队伍',
+    // '返回式神录',
+    // '返回庭院',
+    // // =============================
+    // '进入式神录',
+    // '姑获鸟装御魂',
+    // '返回式神录',
+    // '返回庭院',
+    // '进入式神录',
+    // '座敷装御魂',
+    // '返回式神录',
+    // '返回庭院',
+    // // =============================
+    // '进入式神录',
+    // '莹草觉醒',
+    // '返回式神录',
+    // '返回庭院',
+    // '进入式神录',
+    // '座敷觉醒',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==========领第二套针女御魂给雪女============
+    // '领成长奖励',
+    // '返回庭院',
+    // // =============================
+    // '进入式神录',
+    // '雪女装御魂',
+    // '返回式神录',
+    // '返回庭院',
+    // // =============================
+    // '进入式神录',
+    // '觉醒座敷升级',
+    // '返回式神录',
+    // '返回庭院',
+    // // // =============================
+    // '切换默认名染和主题',
+    // '返回庭院',
+    // // =============================
+    // '加入/创建阴阳寮',
+    // '返回庭院',
+    // '创建结界',
+    // '返回庭院',
+    // // =============================
+    // '审批寮成员申请',
+    // '返回庭院',
+    // // =============================
+    // '庭院进入探索地图',
+    // '打开经验BUFF',
+    // '打最后一章探索副本2次',
+    // '返回庭院',
+    // // =============================
+    // '庭院进入探索地图',
+    // '清突破',
+    // '返回庭院',
+    // // ==============================
+    // '过剧情',
+    // '返回庭院',
+    // // =============================
+    // '庭院进入探索地图',
+    // '打开经验BUFF',
+    // '打最后一章探索副本2次',
+    // '返回庭院',
+    // // =============================
+    // '打开金币BUFF',
+    // '返回庭院',
+    // '金币妖怪',
+    // '返回庭院',
+    // '返回庭院',
+    // // =============================
+    // '打开经验BUFF',
+    // '返回庭院',
+    // '经验妖怪',
+    // '返回庭院',
+    // '返回庭院',
+    // // ==============================
+    // '过剧情',
+    // '返回庭院',
+    // // ==============================
+    // '领成长奖励',
+    // '返回庭院',
+    // // ==============================
+    // '珍旅屋借式神',
+    // '返回庭院',
+    // // ==============================
+    // '领取花合战奖励',
+    // '返回庭院',
+    // // ==============================
+    // '庭院进入探索地图',
+    // '打开觉醒BUFF',
+    // '打开经验BUFF',
+    // '打觉醒',
+    // '返回庭院',
+    // // ==============================
+    // '领邮件',
+    // '返回庭院',
+    // // ==============================
+    // '领取花合战奖励',
+    // '返回庭院',
+    // // ==============================
+    // '买体力',
+    // '返回庭院',
+    // // ==============================
+    // '庭院进入探索地图',
+    // '打开御魂BUFF',
+    // '打开经验BUFF',
+    // '打御魂',
+    // '返回庭院',
+    // // ==============================
+    // '领成长奖励',
+    // '返回庭院',
+    // // ==============================
+    // '领取花合战奖励',
+    // '返回庭院',
+    // // ==============================
+    // '姑获鸟升星',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==============================
+    // '领成长奖励',
+    // '返回庭院',
+    // // ==============================
+    // '领取花合战奖励',
+    // '返回庭院',
+    // // ==============================
+    // '雪女升星',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==============================
+    // '检测等级',
+    // // ==============================
+    // '庭院进入探索地图',
+    // '打开觉醒BUFF',
+    // '打开经验BUFF',
+    // '打觉醒',
+    // '返回庭院',
+    // // ==============================
+    // '庭院进入探索地图',
+    // '打开御魂BUFF',
+    // '打开经验BUFF',
+    // '打御魂',
+    // '返回庭院',
+    // // ==============================
+    // '领成长奖励',
+    // '返回庭院',
+    // // ==============================
+    // '领取花合战奖励',
+    // '返回庭院',
+    // // ==============================
+    // '进入式神录',
+    // '姑获鸟觉醒',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==============================
+    // '进入式神录',
+    // '雪女觉醒',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==============================
+    // '座敷升星',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==============================
+    // '莹草升星',
+    // '返回式神录',
+    // '返回庭院',
+    // // ==============================
+    // '领取花合战奖励',
+    // '返回庭院',
+    // // ==============================
+    // '商店购买永久勾玉卡',
+    // '返回庭院',
+    // // ==============================
+    // '升级结界体力食盒',
+    // '返回庭院',
+    // // ==============================
+    // '关闭留言板',
+    // '返回庭院',
+    // '添加好友',
+    // '创建同心队',
+    // '同心队预存式神',
     '切换默认名染和主题',
-    '返回庭院',
-    // =============================
-    '加入/创建阴阳寮',
-    '返回庭院',
-    '创建结界',
-    '返回庭院',
-    // =============================
-    '审批寮成员申请',
-    '返回庭院',
-    // =============================
-    '庭院进入探索地图',
-    '打开经验BUFF',
-    '打最后一章探索副本2次',
-    '返回庭院',
-    // =============================
-    '庭院进入探索地图',
-    '清突破',
-    '返回庭院',
-    // ==============================
-    '过剧情',
-    '返回庭院',
-    // =============================
-    '庭院进入探索地图',
-    '打开经验BUFF',
-    '打最后一章探索副本2次',
-    '返回庭院',
-    // =============================
-    '打开金币BUFF',
-    '返回庭院',
-    '金币妖怪',
-    '返回庭院',
-    '返回庭院',
-    // =============================
-    '打开经验BUFF',
-    '返回庭院',
-    '经验妖怪',
-    '返回庭院',
-    '返回庭院',
-    // ==============================
-    '过剧情',
-    '返回庭院',
-    // ==============================
-    '领成长奖励',
-    '返回庭院',
-    // ==============================
-    '珍旅屋借式神',
-    '返回庭院',
-    // ==============================
-    '领取花合战奖励',
-    '返回庭院',
-    // ==============================
-    '庭院进入探索地图',
-    '打开觉醒BUFF',
-    '打开经验BUFF',
-    '打觉醒',
-    '返回庭院',
-    // ==============================
-    '领邮件',
-    '返回庭院',
-    // ==============================
-    '领取花合战奖励',
-    '返回庭院',
-    // ==============================
-    '买体力',
-    '返回庭院',
-    // ==============================
-    '庭院进入探索地图',
-    '打开御魂BUFF',
-    '打开经验BUFF',
-    '打御魂',
-    '返回庭院',
-    // ==============================
-    '领成长奖励',
-    '返回庭院',
-    // ==============================
-    '领取花合战奖励',
-    '返回庭院',
-    // ==============================
-    '姑获鸟升星',
-    '返回式神录',
-    '返回庭院',
-    // ==============================
-    '领成长奖励',
-    '返回庭院',
-    // ==============================
-    '领取花合战奖励',
-    '返回庭院',
-    // ==============================
-    '雪女升星',
-    '返回式神录',
-    '返回庭院',
-    // ==============================
-    '检测等级',
-    // ==============================
-    '庭院进入探索地图',
-    '打开觉醒BUFF',
-    '打开经验BUFF',
-    '打觉醒',
-    '返回庭院',
-    // ==============================
-    '庭院进入探索地图',
-    '打开御魂BUFF',
-    '打开经验BUFF',
-    '打御魂',
-    '返回庭院',
-    // ==============================
-    '领成长奖励',
-    '返回庭院',
-    // ==============================
-    '领取花合战奖励',
-    '返回庭院',
-    // ==============================
-    '进入式神录',
-    '姑获鸟觉醒',
-    '返回式神录',
-    '返回庭院',
-    // ==============================
-    '进入式神录',
-    '雪女觉醒',
-    '返回式神录',
-    '返回庭院',
-    // ==============================
-    '座敷升星',
-    '返回式神录',
-    '返回庭院',
-    // ==============================
-    '莹草升星',
-    '返回式神录',
-    '返回庭院',
-    // ==============================
-    '领取花合战奖励',
-    '返回庭院',
-    // ==============================
-    '商店购买永久勾玉卡',
-    '返回庭院',
-    // ==============================
-    '升级结界体力食盒',
-    '返回庭院',
-    // ==============================
-    '关闭留言板',
-    '返回庭院',
-    // ==============================
     '返回庭院_等待',
 ];
 var Func65 = /** @class */ (function () {
@@ -30363,9 +30432,9 @@ var Func65 = /** @class */ (function () {
         // 直接从Script实例获取最新任务信息
         var taskData = thisScript.getLatestTaskInfo();
         if (taskData) {
-            if (taskData.task && Array.isArray(taskData.task)) {
-                taskList = taskData.task;
-            }
+            // if (taskData.task && Array.isArray(taskData.task)) {
+            //     taskList = taskData.task;
+            // }
             if (taskData.account !== undefined) {
                 member.account = taskData.account;
             }
@@ -30381,9 +30450,9 @@ var Func65 = /** @class */ (function () {
             if (taskData.platform_type !== undefined) {
                 member.platform_type = taskData.platform_type;
             }
-            if (taskData.taskIndex !== undefined) {
-                thisScript.initialGlobal.taskIndex = taskData.taskIndex;
-            }
+            // if (taskData.taskIndex !== undefined) {
+            //     thisScript.initialGlobal.taskIndex = taskData.taskIndex;
+            // }
             if (taskData.area_search_name !== undefined) {
                 member.area_search_name = taskData.area_search_name;
             }
@@ -30410,7 +30479,6 @@ var Func65 = /** @class */ (function () {
         }
         else if (!taskData && taskList.length === 0 && thisScript.initialGlobal.taskIndex === 0) {
             console.log('没任务了，停止脚本！');
-            thisScript.initialGlobal.script_waiting = true;
             thisScript.stop();
             return false;
         }
@@ -30716,6 +30784,424 @@ var Func65 = /** @class */ (function () {
             case '登录账号':
                 switchAccounts();
                 break;
+            case '添加好友':
+                if (member.tongxin_role == 0) {
+                    if (member.friends_list.length > thisScript.initialGlobal.friend_index) {
+                        addFriend();
+                    }
+                    else {
+                        thisScript.initialGlobal.taskIndex++;
+                    }
+                }
+                else if (member.tongxin_role == 1) {
+                    if (member.friend_apply) {
+                        sleep(30000);
+                        approveFriend();
+                    }
+                    else {
+                        sleep(10000);
+                    }
+                }
+                else if (member.tongxin_role == -1) {
+                    sleep(10000);
+                }
+                break;
+            case '创建同心队':
+                if (member.tongxin_role == 0) {
+                    if (member.all_members_added) {
+                        createTongxin();
+                    }
+                    else {
+                        sleep(10000);
+                    }
+                }
+                else if (member.tongxin_role == 1) {
+                    addTongxin();
+                }
+                else if (member.tongxin_role == -1) {
+                    sleep(10000);
+                }
+                break;
+            case '同心队预存式神':
+                saveTongxinShishen();
+                break;
+        }
+        /**
+         * 同心队预存式神
+         */
+        function saveTongxinShishen() {
+            var taskName = '同心队预存式神';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('组队图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入同心队,并打开预存式神按钮',
+                operator: [thisOperator[3], thisOperator[2], thisOperator[4]]
+            })) {
+                return true;
+            }
+            if (!thisScript.initialGlobal.tili_save) {
+                if (thisScript.oper({
+                    name: '点击一键预设',
+                    operator: [{
+                            desc: thisOperator[5].desc,
+                            oper: [thisOperator[5].oper[0]]
+                        }]
+                })) {
+                    sleep(3000);
+                    thisScript.keepScreen(true);
+                    if (thisScript.oper({
+                        name: '点击确定',
+                        operator: [thisOperator[6]]
+                    })) {
+                        thisScript.initialGlobal.tili_save = true;
+                        return true;
+                    }
+                    return true;
+                }
+            }
+            else if (!thisScript.initialGlobal.shishen_save) {
+                if (thisScript.oper({
+                    name: '点击预存式神',
+                    operator: [{
+                            desc: thisOperator[5].desc,
+                            oper: [thisOperator[5].oper[1]]
+                        }]
+                })) {
+                    return true;
+                }
+                if (!thisScript.oper({
+                    name: '判断是否在预存式神界面',
+                    operator: [{
+                            desc: thisOperator[7].desc,
+                        }]
+                })) {
+                    return true;
+                }
+                if (thisScript.initialGlobal.shishen_save_list === null) {
+                    thisScript.initialGlobal.shishen_save_list = ['姑获鸟', '雪女', '座敷'];
+                }
+                if (thisScript.initialGlobal.shishen_save_list && thisScript.initialGlobal.shishen_save_list.length > 0) {
+                    // 获取第一个式神名称
+                    var targetShishen = thisScript.initialGlobal.shishen_save_list[0];
+                    // 查找该式神图标
+                    var shishen_icon = thisScript.findMultiColor("\u9884\u5B58_".concat(targetShishen));
+                    if (shishen_icon) {
+                        var swipe1 = [shishen_icon.x + 10, shishen_icon.y + 10, shishen_icon.x + 30, shishen_icon.y + 30, 1000];
+                        var swipe2 = [shishen_icon.x + 60, shishen_icon.y - 240, shishen_icon.x + 80, shishen_icon.y - 220, 1000];
+                        thisScript.regionBezierSwipe(swipe1, swipe2, [800, 1000], 0, 1000);
+                        // 移除已点击的式神
+                        thisScript.initialGlobal.shishen_find_count = 0;
+                        thisScript.initialGlobal.shishen_save_list.shift();
+                        sleep(1000);
+                        return true;
+                    }
+                    else {
+                        thisScript.initialGlobal.shishen_find_count++;
+                        sleep(1000);
+                        if (thisScript.initialGlobal.shishen_find_count >= 5) {
+                            thisScript.initialGlobal.shishen_find_count = 0;
+                            thisScript.initialGlobal.shishen_save_list.shift();
+                            sleep(1000);
+                        }
+                    }
+                }
+                else if (thisScript.initialGlobal.shishen_save_list && thisScript.initialGlobal.shishen_save_list.length === 0) {
+                    if (thisScript.oper({
+                        name: '点击保存',
+                        operator: [thisOperator[7]]
+                    })) {
+                        thisScript.initialGlobal.shishen_save = true;
+                        return true;
+                    }
+                }
+            }
+            else if (thisScript.initialGlobal.tili_save && thisScript.initialGlobal.shishen_save) {
+                if (thisScript.oper({
+                    name: '关闭式神预存',
+                    operator: [thisOperator[8]]
+                })) {
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+            }
+        }
+        /**
+         * 创建同心队
+         */
+        function createTongxin() {
+            var taskName = '创建同心队';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('组队图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入同心队，并打开系统输入框',
+                operator: [thisOperator[10], thisOperator[2], thisOperator[3], thisOperator[4]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '点击输入框',
+                operator: [{
+                        desc: thisOperator[5].desc
+                    }]
+            })) {
+                setClip(member.tongxin_name);
+                var et = className("EditText").findOne();
+                et.paste();
+                sleep(3000);
+                if (thisScript.oper({
+                    name: '点击输入框',
+                    operator: [thisOperator[5]]
+                })) {
+                    return true;
+                }
+                return true;
+            }
+            if (!thisScript.oper({
+                name: '判断是否是创建同心队界面',
+                operator: [{
+                        desc: thisOperator[4].desc
+                    }]
+            })) {
+                if (thisScript.oper({
+                    name: '点击创建',
+                    operator: [thisOperator[6]]
+                })) {
+                    return true;
+                }
+            }
+            if (thisScript.oper({
+                name: '点击邀请好友',
+                operator: [thisOperator[7], thisOperator[8]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '邀请好友',
+                operator: [thisOperator[9]]
+            })) {
+                thisScript.initialGlobal.taskIndex++;
+                return true;
+            }
+        }
+        /**
+         * 创建同心队
+         */
+        function addTongxin() {
+            var taskName = '加入同心队';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('组队图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '灰色组队界面',
+                operator: [thisOperator[5]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断是否在同心队界面',
+                operator: [thisOperator[2]]
+            })) {
+                var tujian_icon = thisScript.findMultiColor('同心队提醒');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 5, tujian_icon.y + 5, tujian_icon.x + 10, tujian_icon.y + 10, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '通过申请',
+                operator: [thisOperator[3]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断是否加入同心队',
+                operator: [thisOperator[4]]
+            })) {
+                thisScript.initialGlobal.taskIndex++;
+                return true;
+            }
+        }
+        /**
+         * 审批好友
+         */
+        function approveFriend() {
+            var taskName = '审批好友';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('好友图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入添加好友界面',
+                operator: [thisOperator[2]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '添加好友界面',
+                operator: [{
+                        desc: thisOperator[3].desc
+                    }]
+            })) {
+                var swipe_time = 10;
+                while (swipe_time--) {
+                    thisScript.regionBezierSwipe(thisOperator[3].oper[1], thisOperator[3].oper[0], [800, 1000], 0, 1000);
+                }
+                sleep(3000);
+                thisScript.keepScreen(true);
+                var true_icon = null;
+                for (var i = 3; i >= 1; i--) {
+                    true_icon = thisScript.findMultiColor("\u597D\u53CB\u5BF9\u94A9_".concat(i));
+                    if (true_icon) {
+                        console.log("\u627E\u5230\u597D\u53CB\u5BF9\u94A9_".concat(i));
+                        break;
+                    }
+                }
+                if (true_icon) {
+                    thisScript.regionClick([[true_icon.x + 10, true_icon.y + 10, true_icon.x + 20, true_icon.y + 20, 1000]]);
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+            }
+        }
+        /**
+         * 添加好友
+         */
+        function addFriend() {
+            var taskName = '添加好友';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('好友图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入添加好友界面，并点击输入框',
+                operator: [thisOperator[2], thisOperator[3]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断输入框是否打开',
+                operator: [{
+                        desc: thisOperator[4].desc
+                    }],
+            })) {
+                sleep(2000);
+                setClip(member.friends_list[thisScript.initialGlobal.friend_index]);
+                var et = className("EditText").findOne();
+                et.paste();
+                sleep(3000);
+                thisScript.keepScreen(true);
+                if (thisScript.oper({
+                    id: 65,
+                    name: '点击确定',
+                    operator: [thisOperator[4]],
+                })) {
+                    return true;
+                }
+            }
+            if (thisScript.oper({
+                id: 65,
+                name: '点击添加好友',
+                operator: [thisOperator[5]],
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                id: 65,
+                name: '点击申请',
+                operator: [thisOperator[6]],
+            })) {
+                sleep(2000);
+                thisScript.keepScreen(true);
+                if (thisScript.oper({
+                    id: 65,
+                    name: '点击关闭',
+                    operator: [thisOperator[7]],
+                })) {
+                    thisScript.initialGlobal.friend_index++;
+                    return true;
+                }
+            }
         }
         /**
            * 切换账号
@@ -31251,7 +31737,7 @@ var Func65 = /** @class */ (function () {
         function switch_mingran_zhuti() {
             var taskName = '切换默认名染和主题';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
-            if (thisScript.initialGlobal.mingran_check && thisScript.initialGlobal.zhuti_check) {
+            if (thisScript.initialGlobal.mingran_check && thisScript.initialGlobal.zhuti_check && thisScript.initialGlobal.team_scene_check) {
                 thisScript.initialGlobal.taskIndex++;
                 return true;
             }
@@ -31288,8 +31774,8 @@ var Func65 = /** @class */ (function () {
                 thisScript.regionBezierSwipe(thisOperator[5].oper[1], thisOperator[5].oper[0], [1200, 1500], 0, 1000);
                 return true;
             }
-            if ((!thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click) &&
-                (!thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check)) {
+            if ((!thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click && !thisScript.initialGlobal.team_scene_click) &&
+                (!thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check && !thisScript.initialGlobal.team_scene_check)) {
                 var TextMatchMod = '模糊';
                 var Text_3 = '名染';
                 var result = thisScript.findTextWithCompareColor(Text_3, 3000, thisOperator[12].oper[0], TextMatchMod, {
@@ -31315,8 +31801,8 @@ var Func65 = /** @class */ (function () {
                     return true;
                 }
             }
-            else if ((thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click) &&
-                (thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check)) {
+            else if ((thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click && !thisScript.initialGlobal.team_scene_click) &&
+                (thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check && !thisScript.initialGlobal.team_scene_check)) {
                 var TextMatchMod = '包含';
                 var Text_4 = '主';
                 var result = thisScript.findTextWithCompareColor(Text_4, 3000, thisOperator[12].oper[0], TextMatchMod, {
@@ -31339,6 +31825,33 @@ var Func65 = /** @class */ (function () {
                     thisScript.regionClick([toClick]);
                     console.log('点击主题');
                     thisScript.initialGlobal.zhuti_click = true;
+                    return true;
+                }
+            }
+            else if ((thisScript.initialGlobal.mingran_click && thisScript.initialGlobal.zhuti_click && !thisScript.initialGlobal.team_scene_click) &&
+                (thisScript.initialGlobal.mingran_check && thisScript.initialGlobal.zhuti_check && !thisScript.initialGlobal.team_scene_check)) {
+                var TextMatchMod = '包含';
+                var Text_5 = '队场';
+                var result = thisScript.findTextWithCompareColor(Text_5, 3000, thisOperator[12].oper[0], TextMatchMod, {
+                    id: 65,
+                    name: '检测装饰页面',
+                    operator: [{
+                            desc: thisOperator[12].desc,
+                        }],
+                });
+                if (result.length > 0) {
+                    var x = (result[0].points[0].x + result[0].points[1].x) / 2;
+                    var y = (result[0].points[0].y + result[0].points[3].y) / 2;
+                    var toClick = [
+                        x,
+                        y,
+                        x + 10,
+                        y + 10,
+                        1200
+                    ];
+                    thisScript.regionClick([toClick]);
+                    console.log('点击组队场景');
+                    thisScript.initialGlobal.team_scene_click = true;
                     return true;
                 }
             }
@@ -31382,7 +31895,30 @@ var Func65 = /** @class */ (function () {
                         desc: thisOperator[10].desc
                     }]
             })) {
+                console.log('主题已关闭');
                 thisScript.initialGlobal.zhuti_check = true;
+                return true;
+            }
+            if (thisScript.oper({
+                name: '关闭组队场景试用',
+                operator: [thisOperator[13]]
+            })) {
+                sleep(2000);
+                return true;
+            }
+            if (!thisScript.initialGlobal.team_scene_check && thisScript.oper({
+                name: '判断组队场景是否关闭',
+                operator: [{
+                        desc: thisOperator[14].desc
+                    }]
+            }) && !thisScript.oper({
+                name: '判断组队场景是否关闭',
+                operator: [{
+                        desc: thisOperator[13].desc
+                    }]
+            })) {
+                console.log('组队场景已关闭');
+                thisScript.initialGlobal.team_scene_check = true;
                 return true;
             }
             return true;
@@ -32136,6 +32672,7 @@ var Func65 = /** @class */ (function () {
                     if (shishen_icon) {
                         thisScript.regionClick([[shishen_icon.x, shishen_icon.y, shishen_icon.x + 10, shishen_icon.y + 10, 1000]]);
                         // 移除已点击的式神
+                        thisScript.initialGlobal.shishen_find_count = 0;
                         thisScript.initialGlobal.shishen_list.shift();
                         sleep(1000);
                     }
@@ -32757,16 +33294,13 @@ var Func65 = /** @class */ (function () {
             if ('个人突破' === thisconfig.type) {
                 return thisScript.oper({
                     name: '地图进入个人突破',
-                    operator: [{
-                            desc: thisOperator[0].desc,
-                            oper: [thisOperator[0].oper[0]]
-                        }, thisOperator[1]]
+                    operator: [thisOperator[1]]
                 });
             }
             else if ('寮突破' === thisconfig.type) {
                 return thisScript.oper({
                     name: '地图进入寮突破',
-                    operator: thisOperator
+                    operator: [thisOperator[2], thisOperator[1]]
                 });
             }
             return false;
@@ -33040,6 +33574,7 @@ var Func65 = /** @class */ (function () {
                             thisScript.regionClick([[shishen_icon.x, shishen_icon.y, shishen_icon.x + 10, shishen_icon.y + 10, 1000]]);
                             thisScript.initialGlobal.last_operation_time = currentTime; // 更新操作时间
                             // 移除已点击的式神
+                            thisScript.initialGlobal.shishen_find_count = 0;
                             thisScript.initialGlobal.fangshou_list.shift();
                             sleep(1000);
                             return true;
@@ -33095,6 +33630,7 @@ var Func65 = /** @class */ (function () {
                             thisScript.regionClick([[shishen_icon.x, shishen_icon.y, shishen_icon.x + 10, shishen_icon.y + 10, 1000]]);
                             thisScript.initialGlobal.last_operation_time = currentTime; // 更新操作时间
                             // 移除已点击的式神
+                            thisScript.initialGlobal.shishen_find_count = 0;
                             thisScript.initialGlobal.yucheng_list.shift();
                             sleep(1000);
                             return true;
@@ -33523,6 +34059,7 @@ var Func65 = /** @class */ (function () {
                     if (shishen_icon) {
                         thisScript.regionClick([[shishen_icon.x, shishen_icon.y, shishen_icon.x + 10, shishen_icon.y + 10, 1000]]);
                         // 移除已点击的式神
+                        thisScript.initialGlobal.shishen_find_count = 0;
                         thisScript.initialGlobal.shishen_list.shift();
                         sleep(1000);
                     }
@@ -33612,6 +34149,7 @@ var Func65 = /** @class */ (function () {
                     if (shishen_icon) {
                         thisScript.regionClick([[shishen_icon.x, shishen_icon.y, shishen_icon.x + 10, shishen_icon.y + 10, 1000]]);
                         // 移除已点击的式神
+                        thisScript.initialGlobal.shishen_find_count = 0;
                         thisScript.initialGlobal.shishen_list.shift();
                         sleep(1000);
                     }
@@ -35846,7 +36384,6 @@ var Func064 = /** @class */ (function () {
         //     return true;
         // } else if (!taskData && taskList.length === 0 && thisScript.initialGlobal.taskIndex === 0) {
         //     console.log('没任务了，停止脚本！');
-        //     thisScript.initialGlobal.script_waiting = true;
         //     thisScript.stop();
         //     return false;
         // }
@@ -36645,6 +37182,9 @@ var start_waiting = null; // 开始等待时间
 var wait_time = 10 * 60 * 1000; // 等待时长 10分钟
 var waiting_status = false; // 等待状态
 var last_taskindex_change_time = Date.now(); // 记录上次taskIndex变化的时间
+var path = '/data/data/com.zzliux.assttyys936debugplayer/files/logs/log.txt'; // 日志目录
+// 全局变量，记录上次获取日志的时间
+var lastLogTime = null;
 var member = {
     account: '',
     password: '',
@@ -36656,8 +37196,13 @@ var member = {
     company_name: '',
     member_id: '',
     company_id: '',
-    company_created: false
+    tongxin_name: '',
+    company_created: false,
+    tongxin_role: -1,
+    all_members_added: false,
+    save_temp: {} // 用于临时保存全局状态
 }; // 当前执行角色
+var lastMemberId = '';
 var operator = [];
 var taskList = [];
 var Func65 = /** @class */ (function () {
@@ -36679,56 +37224,262 @@ var Func65 = /** @class */ (function () {
         // }
         // 直接从Script实例获取最新任务信息
         var taskData = thisScript.getLatestTaskInfo();
-        if (taskData) {
-            if (taskData.task && Array.isArray(taskData.task)) {
-                taskList = taskData.task;
-            }
-            if (taskData.account !== undefined) {
-                member.account = taskData.account;
-            }
-            if (taskData.password !== undefined) {
-                member.password = taskData.password;
-            }
-            if (taskData.name !== undefined) {
-                member.name = taskData.name;
-            }
-            if (taskData.area !== undefined) {
-                member.area = taskData.area;
-            }
-            if (taskData.platform_type !== undefined) {
-                member.platform_type = taskData.platform_type;
-            }
+        if (taskData && taskData.message_type === 'task') {
             if (taskData.taskIndex !== undefined) {
                 thisScript.initialGlobal.taskIndex = taskData.taskIndex;
             }
-            if (taskData.area_search_name !== undefined) {
-                member.area_search_name = taskData.area_search_name;
+            if (taskData.task && Array.isArray(taskData.task)) {
+                taskList = taskData.task;
             }
-            if (taskData.member_id !== undefined) {
-                member.member_id = taskData.member_id;
+        }
+        if (thisScript.initialGlobal.last_index != thisScript.initialGlobal.taskIndex) {
+            // last_taskindex_change_time = Date.now(); // 更新taskIndex变化时间
+            console.error("\u6267\u884C\u4EFB\u52A1:".concat(taskList[thisScript.initialGlobal.taskIndex]), thisScript.initialGlobal.taskIndex);
+            if (thisScript.initialGlobal.taskIndex == 0 && !thisScript.initialGlobal.isInit) {
+                thisScript.initialGlobal.seizing_num = 0; //卡屏次数置0
+                thisScript.initGlobal(); //初始化全局变量
+                thisScript.initialGlobal.isInit = true; //初始化标记置为true
+                sleep(3000);
+                console.log('关闭游戏6');
+                thisScript.stopRelatedApp();
+                sleep(3000);
             }
-            if (taskData.company_id !== undefined) {
-                member.company_id = taskData.company_id;
+            thisScript.initialGlobal.last_index = thisScript.initialGlobal.taskIndex;
+            // 发送任务索引变更消息到服务器
+            // 创建全局状态的副本并排除不需要同步的字段
+            var globalCopy_1 = JSON.parse(JSON.stringify(thisScript.initialGlobal));
+            // 使用数组存储所有需要删除的属性，方便维护
+            var propertiesToDelete = [
+                'seizing_num',
+                'app_is_open_flag',
+                'last_operation_time',
+                'taskIndex',
+                'current_member_id',
+                'click_enter_times',
+                'cg_close',
+                'accountChangeOpen',
+                'findedAccountName',
+                'accountIsSelect',
+                'findAccountCount',
+                'account_input_flag',
+                'create_member_flag',
+                'checked_yard_count'
+            ];
+            // 循环删除属性
+            propertiesToDelete.forEach(function (prop) {
+                delete globalCopy_1[prop];
+            });
+            thisScript.doPush(thisScript, {
+                text: "\u4EFB\u52A1\u7D22\u5F15\u53D8\u66F42: ".concat(thisScript.initialGlobal.taskIndex),
+                type: 0,
+                message: {
+                    type: 'task_index_change',
+                    task_index: thisScript.initialGlobal.taskIndex,
+                    task_list: taskList,
+                    area: member.area,
+                    name: member.name,
+                    platform_type: member.platform_type,
+                    account: member.account,
+                    global: globalCopy_1,
+                    logs: get_log() // 新增日志字段
+                }
+            });
+        }
+        if (taskData && (taskData.message_type === 'update_task' && (taskList.length === 0 || (taskList.length > 0 && ['返回庭院', '返回庭院_切换账号', '加入/创建阴阳寮', '添加好友', '创建同心队'].includes(taskList[thisScript.initialGlobal.taskIndex]))))) {
+            // TDOD：需要等待其余账号完成任务时，由后端发起切换账号，做到资源利用的最大化
+            if (taskList.length > 0) {
+                var idx = thisScript.initialGlobal.taskIndex;
+                var temp_index = idx;
+                var temp_taskList = taskList.slice();
+                if (temp_taskList[idx] === '返回庭院') {
+                    // 在当前索引后插入
+                    temp_taskList.splice(idx + 1, 0, '登录账号', '返回庭院');
+                    temp_index = idx + 1;
+                }
+                else if (['返回庭院_切换账号', '加入/创建阴阳寮', '添加好友', '创建同心队'].includes(temp_taskList[idx])) {
+                    // 在当前索引前插入
+                    temp_taskList.splice(idx, 0, '登录账号', '返回庭院');
+                    // taskIndex不变
+                }
+                // 创建全局状态的副本并排除不需要同步的字段
+                var globalCopy_2 = JSON.parse(JSON.stringify(thisScript.initialGlobal));
+                // 使用数组存储所有需要删除的属性，方便维护
+                var propertiesToDelete = [
+                    'seizing_num',
+                    'app_is_open_flag',
+                    'last_operation_time',
+                    'taskIndex',
+                    'current_member_id',
+                    'click_enter_times',
+                    'cg_close',
+                    'accountChangeOpen',
+                    'findedAccountName',
+                    'accountIsSelect',
+                    'findAccountCount',
+                    'account_input_flag',
+                    'create_member_flag',
+                    'checked_yard_count'
+                ];
+                // 循环删除属性
+                propertiesToDelete.forEach(function (prop) {
+                    delete globalCopy_2[prop];
+                });
+                thisScript.doPush(thisScript, {
+                    text: "\u4EFB\u52A1\u7D22\u5F15\u53D8\u66F41: ".concat(thisScript.initialGlobal.taskIndex),
+                    type: 0,
+                    message: {
+                        type: 'task_index_change',
+                        task_index: temp_index,
+                        task_list: temp_taskList,
+                        area: member.area,
+                        name: member.name,
+                        platform_type: member.platform_type,
+                        account: member.account,
+                        global: globalCopy_2,
+                        logs: get_log() // 新增日志字段
+                    }
+                });
             }
-            if (taskData.company_role !== undefined) {
-                member.company_role = taskData.company_role === 0 || taskData.company_role === 1 ? 'creator' : taskData.company_role === 2 ? 'member' : taskData.company_role;
+        }
+        if (taskData) {
+            if (taskData.message_type === 'task' ||
+                (taskData.message_type === 'update_task' && (taskList.length === 0 || (taskList.length > 0 && ['返回庭院', '返回庭院_切换账号', '加入/创建阴阳寮', '添加好友', '创建同心队'].includes(taskList[thisScript.initialGlobal.taskIndex]))))) {
+                console.log('更新');
+                if (taskData.member_id !== undefined) {
+                    member.member_id = taskData.member_id;
+                }
+                // 检测member.member_id变化并发送消息
+                if (taskData.member_id && lastMemberId !== taskData.member_id) {
+                    lastMemberId = taskData.member_id;
+                    console.error("\u89D2\u8272ID\u53D8\u66F4: ".concat(taskData.member_id));
+                    // 发送角色变更消息到服务器
+                    thisScript.doPush(thisScript, {
+                        text: "\u89D2\u8272ID\u53D8\u66F4: ".concat(taskData.member_id),
+                        type: 0,
+                        message: {
+                            type: 'member_id_change',
+                            member_id: taskData.member_id,
+                            member_name: taskData.name,
+                            area: taskData.area,
+                            platform_type: taskData.platform_type,
+                            account: taskData.account
+                        }
+                    });
+                    member = {
+                        account: '',
+                        password: '',
+                        name: '',
+                        area: '',
+                        platform_type: 'android',
+                        area_search_name: '',
+                        company_role: '',
+                        company_name: '',
+                        member_id: '',
+                        company_id: '',
+                        tongxin_name: '',
+                        company_created: false,
+                        tongxin_role: -1,
+                        all_members_added: false,
+                        save_temp: {} // 用于临时保存全局状态
+                    };
+                    thisScript.initGlobal(); //初始化全局变量
+                    thisScript.initialGlobal.seizing_num = 0; //卡屏次数置0
+                    thisScript.initialGlobal.isInit = true; //初始化标记置为true
+                    if (taskData.task && taskData.taskIndex !== undefined && taskData.task[taskData.taskIndex] == '登录账号') {
+                        console.log('关闭游戏');
+                        thisScript.stopRelatedApp();
+                        sleep(3000);
+                    }
+                    thisScript.initialGlobal.current_member_id = taskData.member_id;
+                }
+                // 接收并处理global字段
+                if (taskData.global !== undefined) {
+                    // 合并global数据，保留当前未定义的字段
+                    for (var key in taskData.global) {
+                        if (taskData.global.hasOwnProperty(key)) {
+                            thisScript.initialGlobal[key] = taskData.global[key];
+                        }
+                    }
+                    thisScript.initialGlobal.isInit = true;
+                    console.log('已同步全局状态数据');
+                }
+                if (taskData.task && Array.isArray(taskData.task)) {
+                    taskList = taskData.task;
+                }
+                if (taskData.account !== undefined) {
+                    member.account = taskData.account;
+                }
+                if (taskData.password !== undefined) {
+                    member.password = taskData.password;
+                }
+                if (taskData.name !== undefined) {
+                    member.name = taskData.name;
+                }
+                if (taskData.area !== undefined) {
+                    member.area = taskData.area;
+                }
+                if (taskData.platform_type !== undefined) {
+                    member.platform_type = taskData.platform_type;
+                }
+                if (taskData.taskIndex !== undefined) {
+                    thisScript.initialGlobal.taskIndex = taskData.taskIndex;
+                }
+                if (taskData.area_search_name !== undefined) {
+                    member.area_search_name = taskData.area_search_name;
+                }
+                if (taskData.member_id !== undefined) {
+                    member.member_id = taskData.member_id;
+                }
+                if (taskData.company_id !== undefined) {
+                    member.company_id = taskData.company_id;
+                }
+                if (taskData.company_role !== undefined) {
+                    member.company_role = taskData.company_role === 0 || taskData.company_role === 1 ? 'creator' : taskData.company_role === 2 ? 'member' : taskData.company_role;
+                }
+                if (taskData.company_name !== undefined) {
+                    member.company_name = taskData.company_name;
+                }
+                if (taskData.tongxin_role !== undefined) {
+                    member.tongxin_role = taskData.tongxin_role;
+                }
+                if (taskData.friends_list !== undefined) {
+                    thisScript.initialGlobal.friends_list = taskData.friends_list;
+                }
+                if (taskData.tongxin_name !== undefined) {
+                    member.tongxin_name = taskData.tongxin_name;
+                }
+                if (taskData.all_members_added !== undefined) {
+                    member.all_members_added = taskData.all_members_added;
+                }
+                if (taskData.friend_apply !== undefined) {
+                    thisScript.initialGlobal.friend_apply = taskData.friend_apply;
+                }
+                if (taskData.tongxin_apply !== undefined) {
+                    thisScript.initialGlobal.tongxin_apply = taskData.tongxin_apply;
+                }
+                if (taskData.start_approval !== undefined) {
+                    thisScript.initialGlobal.approve_company_request = taskData.start_approval;
+                    console.log('收到开始审批消息');
+                }
+                if (taskData.operator !== undefined) {
+                    operator = taskData.operator;
+                }
+                if (taskData.company_created !== undefined) {
+                    member.company_created = taskData.company_created;
+                    console.log("\u9634\u9633\u5BEE\u521B\u5EFA\u5B8C\u6210!");
+                }
+                if (taskData.company_approval_completed !== undefined) {
+                    thisScript.initialGlobal.company_approval_completed = taskData.company_approval_completed;
+                    console.log("\u9634\u9633\u5BEE\u5BA1\u6279\u7ED3\u675F\u901A\u77E5!");
+                }
+                // 清除RabbitMQ消息缓存
+                thisScript.clearRabbitMQMessageCache();
+                return true;
             }
-            if (taskData.company_name !== undefined) {
-                member.company_name = taskData.company_name;
-            }
-            if (taskData.operator !== undefined) {
-                operator = taskData.operator;
-            }
-            if (taskData.company_created !== undefined) {
-                member.company_created = taskData.company_created;
-                thisScript.myToast("\u9634\u9633\u5BEE\u521B\u5EFA\u5B8C\u6210!");
-            }
-            return true;
         }
         else if (!taskData && taskList.length === 0 && thisScript.initialGlobal.taskIndex === 0) {
             console.log('没任务了，停止脚本！');
-            thisScript.initialGlobal.script_waiting = true;
-            thisScript.stop();
+            thisScript.stop(); // 停止脚本
             return false;
         }
         if (operator.length > 0) {
@@ -36746,6 +37497,70 @@ var Func65 = /** @class */ (function () {
             name: '关闭各种弹窗',
             operator: closeConfig
         });
+        var closeLink = '已断开连接';
+        var closeLinkConfig = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][closeLink], closeLink);
+        if (thisScript.oper({
+            name: '已断开连接',
+            operator: [{
+                    desc: closeLinkConfig[0].desc,
+                }]
+        })) {
+            // 判断当前是否为周三，以及是否晚于9点
+            var now = new Date();
+            var isWednesday = now.getDay() === 3; // 0是周日，3是周三
+            var isAfter9AM = now.getHours() >= 9;
+            // 如果是周三且晚于9点，则不重置某些状态
+            if (!isWednesday || (isWednesday && isAfter9AM)) {
+                console.log("当前是周三且晚于9点，保留部分状态");
+                // 重置initialGlobal中的字段为默认值
+                thisScript.initialGlobal.seizing_num = 0;
+                thisScript.initialGlobal.app_is_open_flag = 0;
+                thisScript.initialGlobal.cg_close = false;
+                thisScript.initialGlobal.accountChangeOpen = false;
+                thisScript.initialGlobal.findedAccountName = false;
+                thisScript.initialGlobal.accountIsSelect = false;
+                thisScript.initialGlobal.findAccountCount = 0;
+                thisScript.initialGlobal.account_input_flag = false;
+                thisScript.initialGlobal.create_member_flag = false;
+                thisScript.initialGlobal.click_enter_times = 0;
+                thisScript.initialGlobal.checked_yard_count = 0;
+                // 定位到当前任务之前最近的"返回庭院"任务
+                var currentTaskIndex = thisScript.initialGlobal.taskIndex;
+                var targetIndex = currentTaskIndex;
+                // 如果当前任务不是"返回庭院"，则向前查找最近的"返回庭院"任务
+                if (taskList[currentTaskIndex] !== '返回庭院') {
+                    for (var i = currentTaskIndex - 1; i >= 0; i--) {
+                        if (taskList[i] === '返回庭院') {
+                            targetIndex = i;
+                            break;
+                        }
+                    }
+                }
+                // 如果找到了"返回庭院"任务，将taskIndex设置为该任务
+                if (targetIndex !== currentTaskIndex) {
+                    console.log("\u5B9A\u4F4D\u5230\u4E4B\u524D\u7684\u8FD4\u56DE\u5EAD\u9662\u4EFB\u52A1\uFF0C\u4ECE\u7D22\u5F15 ".concat(currentTaskIndex, " \u8C03\u6574\u5230 ").concat(targetIndex));
+                    thisScript.initialGlobal.taskIndex = targetIndex;
+                }
+                // 在当前任务后插入"登录账号"和"返回庭院"任务
+                console.log("\u5728\u4EFB\u52A1\u7D22\u5F15 ".concat(thisScript.initialGlobal.taskIndex, " \u540E\u63D2\u5165\u767B\u5F55\u8D26\u53F7\u548C\u8FD4\u56DE\u5EAD\u9662\u4EFB\u52A1"));
+                taskList.splice(thisScript.initialGlobal.taskIndex + 1, 0, '登录账号', '返回庭院');
+                thisScript.initialGlobal.taskIndex = thisScript.initialGlobal.taskIndex + 1;
+                if (thisScript.oper({
+                    name: '已断开连接',
+                    operator: [closeLinkConfig[0]]
+                })) {
+                    console.log('关闭游戏2');
+                    thisScript.stopRelatedApp();
+                    sleep(10 * 1000);
+                    return true;
+                }
+            }
+            else {
+                console.log("当前不是周三或周三早于9点");
+                sleep(60 * 1000);
+                return true;
+            }
+        }
         // 突破配置
         var attack_conf = {
             do_times: 9,
@@ -36785,25 +37600,106 @@ var Func65 = /** @class */ (function () {
             team_wait_time: '5', // 等待时间(分钟)
             // ------------------
         };
-        var company_name = ''; // 阴阳寮名称
-        if (thisScript.initialGlobal.last_index != thisScript.initialGlobal.taskIndex) {
-            thisScript.initialGlobal.last_index = thisScript.initialGlobal.taskIndex;
-            // last_taskindex_change_time = Date.now(); // 更新taskIndex变化时间
-            console.error("\u6267\u884C\u4EFB\u52A1:".concat(taskList[thisScript.initialGlobal.taskIndex]));
-            // 发送任务索引变更消息到服务器
-            thisScript.doPush(thisScript, {
-                text: "\u4EFB\u52A1\u7D22\u5F15\u53D8\u66F4: ".concat(thisScript.initialGlobal.taskIndex),
-                type: 0,
-                message: {
-                    type: 'task_index_change',
-                    task_index: thisScript.initialGlobal.taskIndex,
-                    task_list: taskList,
-                    area: member.area,
-                    name: member.name,
-                    platform_type: member.platform_type,
-                    account: member.account
+        if (thisScript.initialGlobal.approve_company_request) {
+            console.log("检测到阴阳寮加入申请，准备插入审批任务");
+            // 获取当前任务索引和任务
+            var currentTaskIndex = thisScript.initialGlobal.taskIndex;
+            var currentTask = taskList[currentTaskIndex];
+            // 检查当前任务和后续任务是否已有"审批寮成员申请"
+            var hasApprovalTask = false;
+            if (currentTask === '审批寮成员申请') {
+                hasApprovalTask = true;
+            }
+            else {
+                // 检查后续任务中是否有审批任务
+                for (var i = currentTaskIndex + 1; i < taskList.length; i++) {
+                    if (taskList[i] === '审批寮成员申请') {
+                        hasApprovalTask = true;
+                        break;
+                    }
                 }
-            });
+            }
+            // 如果没有审批任务，则根据条件插入
+            if (!hasApprovalTask) {
+                // 情况1：当前任务是"返回庭院_切换账号"，在当前任务前插入
+                if (currentTask === '返回庭院_切换账号') {
+                    console.log("当前任务是返回庭院_切换账号，在当前任务前插入审批任务");
+                    taskList.splice(currentTaskIndex, 0, '审批寮成员申请', '返回庭院');
+                }
+                else {
+                    // 情况2：找到当前任务后第一个"返回庭院"任务，在它后面插入
+                    var returnHomeIndex = -1;
+                    for (var i = currentTaskIndex + 1; i < taskList.length; i++) {
+                        if (taskList[i] === '返回庭院') {
+                            returnHomeIndex = i;
+                            break;
+                        }
+                    }
+                    if (returnHomeIndex !== -1) {
+                        console.log("\u5728\u4EFB\u52A1\u7D22\u5F15 ".concat(returnHomeIndex, " (\u8FD4\u56DE\u5EAD\u9662) \u540E\u63D2\u5165\u5BA1\u6279\u4EFB\u52A1"));
+                        taskList.splice(returnHomeIndex + 1, 0, '审批寮成员申请', '返回庭院');
+                    }
+                    else {
+                        // 如果没有找到返回庭院任务，则在当前任务列表末尾添加
+                        console.log("未找到返回庭院任务，在任务列表末尾添加审批任务");
+                        taskList.push('审批寮成员申请', '返回庭院');
+                    }
+                }
+            }
+            else {
+                console.log("任务列表中已有审批寮成员申请任务，无需插入");
+            }
+            // 重置申请标志
+            thisScript.initialGlobal.approve_company_request = false;
+        }
+        // 检查是否需要为特定区服插入购买经验加成任务
+        var specialServers = ["松之苍", "莲之净", "桂之馥"];
+        if (!thisScript.initialGlobal.exp_buff_inserted && member.area && specialServers.includes(member.area)) {
+            console.log("\u68C0\u6D4B\u5230\u89D2\u8272\u6240\u5728\u533A\u670D[".concat(member.area, "]\u9700\u8981\u8D2D\u4E70\u7ECF\u9A8C\u52A0\u6210"));
+            // 获取当前任务索引和任务列表
+            var currentTaskIndex = thisScript.initialGlobal.taskIndex;
+            // 查找当前任务后的第一个"检测等级"任务
+            var levelCheckIndex = -1;
+            for (var i = currentTaskIndex + 1; i < taskList.length; i++) {
+                if (taskList[i] === '检测等级') {
+                    levelCheckIndex = i;
+                    break;
+                }
+            }
+            // 如果找到了"检测等级"任务，在其前面插入购买经验加成任务
+            if (levelCheckIndex !== -1) {
+                console.log("\u5728\u4EFB\u52A1\u7D22\u5F15 ".concat(levelCheckIndex, " (\u68C0\u6D4B\u7B49\u7EA7) \u524D\u63D2\u5165\u8D2D\u4E70\u7ECF\u9A8C\u52A0\u6210\u4EFB\u52A1"));
+                taskList.splice(levelCheckIndex, 0, '购买经验加成', '返回庭院');
+            }
+            else {
+                console.log("\u672A\u627E\u5230\u68C0\u6D4B\u7B49\u7EA7\u4EFB\u52A1\uFF0C\u65E0\u6CD5\u63D2\u5165\u8D2D\u4E70\u7ECF\u9A8C\u52A0\u6210\u4EFB\u52A1");
+            }
+            // 设置标志位，确保只插入一次
+            thisScript.initialGlobal.exp_buff_inserted = true;
+        }
+        // 检查是否需要插入买60勾体力任务
+        if (!thisScript.initialGlobal.tili60_inserted && member.area && specialServers.includes(member.area)) {
+            console.log('检查是否需要插入买60勾体力任务');
+            // 获取当前任务索引
+            var currentTaskIndex = thisScript.initialGlobal.taskIndex;
+            // 查找当前任务后的"加入/创建阴阳寮"任务
+            var companyIndex = -1;
+            for (var i = currentTaskIndex + 1; i < taskList.length; i++) {
+                if (taskList[i] === '加入/创建阴阳寮') {
+                    companyIndex = i;
+                    break;
+                }
+            }
+            // 如果找到了"加入/创建阴阳寮"任务，在其前面插入买60勾体力任务
+            if (companyIndex !== -1) {
+                console.log("\u5728\u4EFB\u52A1\u7D22\u5F15 ".concat(companyIndex, " (").concat(taskList[companyIndex], ") \u524D\u63D2\u5165\u4E7060\u52FE\u4F53\u529B\u4EFB\u52A1"));
+                taskList.splice(companyIndex, 0, '买60勾体力', '返回庭院');
+            }
+            else {
+                console.log('未找到加入/创建阴阳寮任务，无法插入买60勾体力任务');
+            }
+            // 设置标志位，确保只插入一次
+            thisScript.initialGlobal.tili60_inserted = true;
         }
         switch (taskList[thisScript.initialGlobal.taskIndex]) {
             case '过犬神剧情':
@@ -36831,7 +37727,12 @@ var Func65 = /** @class */ (function () {
                 goBackHome(true, false); //返回庭院(等待)
                 break;
             case '返回庭院_切换账号':
-                goBackHome(true, true); //返回庭院(切换账号)
+                if (member.company_role === 'member') {
+                    goBackHome(true, true); //返回庭院(切换账号)
+                }
+                else {
+                    goBackHome(true, false); //返回庭院(等待)
+                }
                 break;
             case '庭院进入探索地图':
                 yardToSearch(); //庭院进入探索界面
@@ -36931,6 +37832,9 @@ var Func65 = /** @class */ (function () {
             case '觉醒座敷升级':
                 update_shishen('觉醒座敷', ['座敷']);
                 break;
+            case '购买经验加成':
+                buy_buff();
+                break;
             case '加入/创建阴阳寮':
                 if (member.company_role == 'creator') {
                     create_company();
@@ -36940,7 +37844,7 @@ var Func65 = /** @class */ (function () {
                         join_company();
                     }
                     else {
-                        thisScript.myToast("\u7B49\u5F85\u9634\u9633\u5BEE\u521B\u5EFA\u5B8C\u6210...");
+                        console.log("\u7B49\u5F85\u9634\u9633\u5BEE\u521B\u5EFA\u5B8C\u6210...");
                         sleep(10000);
                     }
                 }
@@ -37004,6 +37908,9 @@ var Func65 = /** @class */ (function () {
             case '买体力':
                 buy_tili();
                 break;
+            case '买60勾体力':
+                buy_tili_60gou();
+                break;
             case '检测等级':
                 check_level(30);
                 break;
@@ -37021,6 +37928,7 @@ var Func65 = /** @class */ (function () {
                 break;
             case '审批寮成员申请':
                 if (member.company_role == 'creator') {
+                    thisScript.initialGlobal.is_approving = true;
                     approve_company_member();
                 }
                 else {
@@ -37033,6 +37941,561 @@ var Func65 = /** @class */ (function () {
             case '登录账号':
                 switchAccounts();
                 break;
+            case '添加好友':
+                if (member.company_role !== 'member') {
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+                if (member.tongxin_role == 0) {
+                    if (thisScript.initialGlobal.friends_list.length > thisScript.initialGlobal.friend_index) {
+                        addFriend();
+                    }
+                    else {
+                        thisScript.initialGlobal.taskIndex++;
+                    }
+                }
+                else if (member.tongxin_role == 1) {
+                    if (thisScript.initialGlobal.friend_apply) {
+                        if (thisScript.initialGlobal.first_friend_wait) {
+                            sleep(30000);
+                            thisScript.initialGlobal.first_friend_wait = false;
+                        }
+                        approveFriend();
+                    }
+                    else {
+                        sleep(10000);
+                    }
+                }
+                else if (member.tongxin_role == -1) {
+                    sleep(10000);
+                }
+                break;
+            case '创建同心队':
+                if (member.company_role !== 'member') {
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+                if (member.tongxin_role == 0) {
+                    if (member.all_members_added) {
+                        createTongxin();
+                    }
+                    else {
+                        sleep(10000);
+                    }
+                }
+                else if (member.tongxin_role == 1) {
+                    if (thisScript.initialGlobal.tongxin_apply) {
+                        if (thisScript.initialGlobal.first_tongxin_wait) {
+                            sleep(30000);
+                            thisScript.initialGlobal.first_tongxin_wait = false;
+                        }
+                        addTongxin();
+                    }
+                    else {
+                        sleep(10000);
+                    }
+                }
+                else if (member.tongxin_role == -1) {
+                    sleep(10000);
+                }
+                break;
+            case '同心队预存式神':
+                if (member.company_role !== 'member') {
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+                saveTongxinShishen();
+                break;
+        }
+        function getLogTime(datetimeString) {
+            // 提取年份
+            var year = parseInt(datetimeString.substr(0, 4));
+            var month = parseInt(datetimeString.substr(5, 2)) - 1; // 月份从0开始，所以要减1
+            var day = parseInt(datetimeString.substr(8, 2));
+            var hours = parseInt(datetimeString.substr(11, 2));
+            var minutes = parseInt(datetimeString.substr(14, 2));
+            var seconds = parseInt(datetimeString.substr(17, 2));
+            var milliseconds = parseInt(datetimeString.substr(20, 3));
+            return new Date(year, month, day, hours, minutes, seconds, milliseconds);
+        }
+        function get_log() {
+            // 第一次调用，返回空数组
+            if (!lastLogTime) {
+                // 记录最新日志时间
+                var logsString_1 = files.read(path);
+                var logsArray_1 = logsString_1.split("\n");
+                for (var i = logsArray_1.length - 1; i >= 0; i--) {
+                    var logEntry = logsArray_1[i];
+                    var timestampRegex = /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{3}/;
+                    var timestampMatch = logEntry.match(timestampRegex);
+                    if (timestampMatch) {
+                        lastLogTime = getLogTime(timestampMatch[0]);
+                        break;
+                    }
+                }
+                return [];
+            }
+            // 非首次，获取上次时间之后的新日志
+            var logsString = files.read(path);
+            var logsArray = logsString.split("\n");
+            var filteredLogs = [];
+            var newestLogTime = lastLogTime;
+            for (var i = logsArray.length - 1; i >= 0; i--) {
+                var logEntry = logsArray[i];
+                var timestampRegex = /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{3}/;
+                var timestampMatch = logEntry.match(timestampRegex);
+                if (timestampMatch) {
+                    var logTimestamp = getLogTime(timestampMatch[0]);
+                    if (logTimestamp > lastLogTime) {
+                        filteredLogs.unshift(logEntry);
+                        if (!newestLogTime || logTimestamp > newestLogTime) {
+                            newestLogTime = logTimestamp;
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+                else {
+                    filteredLogs.unshift(logEntry);
+                }
+            }
+            // 更新lastLogTime为本次最新日志时间
+            if (newestLogTime && newestLogTime > lastLogTime) {
+                lastLogTime = newestLogTime;
+            }
+            return filteredLogs;
+        }
+        /**
+         * 同心队预存式神
+         */
+        function saveTongxinShishen() {
+            var taskName = '同心队预存式神';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('组队图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入同心队,并打开预存式神按钮',
+                operator: [thisOperator[3], thisOperator[2], thisOperator[4]]
+            })) {
+                return true;
+            }
+            if (!thisScript.initialGlobal.tili_save) {
+                if (thisScript.oper({
+                    name: '点击一键预设',
+                    operator: [{
+                            desc: thisOperator[5].desc,
+                            oper: [thisOperator[5].oper[0]]
+                        }]
+                })) {
+                    sleep(3000);
+                    thisScript.keepScreen(true);
+                    if (thisScript.oper({
+                        name: '点击确定',
+                        operator: [thisOperator[6]]
+                    })) {
+                        thisScript.initialGlobal.tili_save = true;
+                        return true;
+                    }
+                    return true;
+                }
+            }
+            else if (!thisScript.initialGlobal.shishen_save) {
+                if (thisScript.oper({
+                    name: '点击预存式神',
+                    operator: [{
+                            desc: thisOperator[5].desc,
+                            oper: [thisOperator[5].oper[1]]
+                        }]
+                })) {
+                    return true;
+                }
+                if (!thisScript.oper({
+                    name: '判断是否在预存式神界面',
+                    operator: [{
+                            desc: thisOperator[7].desc,
+                        }]
+                })) {
+                    return true;
+                }
+                if (thisScript.initialGlobal.shishen_save_list === null) {
+                    thisScript.initialGlobal.shishen_save_list = ['姑获鸟', '雪女', '座敷'];
+                }
+                if (thisScript.initialGlobal.shishen_save_list && thisScript.initialGlobal.shishen_save_list.length > 0) {
+                    // 获取第一个式神名称
+                    var targetShishen = thisScript.initialGlobal.shishen_save_list[0];
+                    // 查找该式神图标
+                    var shishen_icon = thisScript.findMultiColor("\u9884\u5B58_".concat(targetShishen));
+                    if (shishen_icon) {
+                        var swipe1 = [shishen_icon.x + 10, shishen_icon.y + 10, shishen_icon.x + 30, shishen_icon.y + 30, 1000];
+                        var swipe2 = [shishen_icon.x + 60, shishen_icon.y - 240, shishen_icon.x + 80, shishen_icon.y - 220, 1000];
+                        thisScript.regionBezierSwipe(swipe1, swipe2, [800, 1000], 0, 1000);
+                        // 移除已点击的式神
+                        thisScript.initialGlobal.shishen_find_count = 0;
+                        thisScript.initialGlobal.shishen_save_list.shift();
+                        sleep(1000);
+                        return true;
+                    }
+                    else {
+                        thisScript.initialGlobal.shishen_find_count++;
+                        sleep(1000);
+                        if (thisScript.initialGlobal.shishen_find_count >= 5) {
+                            thisScript.initialGlobal.shishen_find_count = 0;
+                            thisScript.initialGlobal.shishen_save_list.shift();
+                            sleep(1000);
+                        }
+                    }
+                }
+                else if (thisScript.initialGlobal.shishen_save_list && thisScript.initialGlobal.shishen_save_list.length === 0) {
+                    if (thisScript.oper({
+                        name: '点击保存',
+                        operator: [thisOperator[7]]
+                    })) {
+                        thisScript.initialGlobal.shishen_save = true;
+                        return true;
+                    }
+                }
+            }
+            else if (thisScript.initialGlobal.tili_save && thisScript.initialGlobal.shishen_save) {
+                if (thisScript.oper({
+                    name: '关闭式神预存',
+                    operator: [thisOperator[8]]
+                })) {
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+            }
+        }
+        /**
+         * 创建同心队
+         */
+        function createTongxin() {
+            var taskName = '创建同心队';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('组队图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入同心队，并打开系统输入框',
+                operator: [thisOperator[10], thisOperator[2], thisOperator[3], thisOperator[4]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '点击输入框',
+                operator: [{
+                        desc: thisOperator[5].desc
+                    }]
+            })) {
+                setClip(member.tongxin_name);
+                var et = className("EditText").findOne();
+                et.paste();
+                sleep(3000);
+                if (thisScript.oper({
+                    name: '点击输入框',
+                    operator: [thisOperator[5]]
+                })) {
+                    return true;
+                }
+                return true;
+            }
+            if (!thisScript.oper({
+                name: '判断是否是创建同心队界面',
+                operator: [{
+                        desc: thisOperator[4].desc
+                    }]
+            })) {
+                if (thisScript.oper({
+                    name: '点击创建',
+                    operator: [thisOperator[6]]
+                })) {
+                    return true;
+                }
+            }
+            if (thisScript.oper({
+                name: '点击邀请好友',
+                operator: [thisOperator[7], thisOperator[8]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '邀请好友',
+                operator: [thisOperator[9]]
+            })) {
+                thisScript.initialGlobal.taskIndex++;
+                // 发送邀请好友完成通知
+                thisScript.doPush(thisScript, {
+                    text: "\u9080\u8BF7\u597D\u53CB\u5B8C\u6210\u901A\u77E5",
+                    type: 0,
+                    message: {
+                        type: 'friend_invited',
+                        member_id: member.member_id, // 使用member.member_id获取角色ID
+                    }
+                });
+                return true;
+            }
+        }
+        /**
+         * 创建同心队
+         */
+        function addTongxin() {
+            var taskName = '加入同心队';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('组队图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '灰色组队界面',
+                operator: [thisOperator[5]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断是否在同心队界面',
+                operator: [thisOperator[2]]
+            })) {
+                var tujian_icon = thisScript.findMultiColor('同心队提醒');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 5, tujian_icon.y + 5, tujian_icon.x + 10, tujian_icon.y + 10, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '通过申请',
+                operator: [thisOperator[3]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断是否加入同心队',
+                operator: [thisOperator[4]]
+            })) {
+                thisScript.initialGlobal.tongxin_apply = false;
+                thisScript.initialGlobal.taskIndex++;
+                return true;
+            }
+        }
+        /**
+         * 审批好友
+         */
+        function approveFriend() {
+            var taskName = '审批好友';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('好友图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            })) {
+                var tujian_icon = thisScript.findMultiColor('好友图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入添加好友界面',
+                operator: [thisOperator[2]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '添加好友界面',
+                operator: [{
+                        desc: thisOperator[3].desc
+                    }]
+            })) {
+                var swipe_time = 10;
+                while (swipe_time--) {
+                    thisScript.regionBezierSwipe(thisOperator[3].oper[1], thisOperator[3].oper[0], [800, 1000], 0, 1000);
+                }
+                sleep(3000);
+                thisScript.keepScreen(true);
+                var true_icon = null;
+                for (var i = 3; i >= 1; i--) {
+                    true_icon = thisScript.findMultiColor("\u597D\u53CB\u5BF9\u94A9_".concat(i));
+                    if (true_icon) {
+                        console.log("\u627E\u5230\u597D\u53CB\u5BF9\u94A9_".concat(i));
+                        break;
+                    }
+                }
+                if (true_icon) {
+                    thisScript.regionClick([[true_icon.x + 10, true_icon.y + 10, true_icon.x + 20, true_icon.y + 20, 1000]]);
+                    thisScript.initialGlobal.friend_apply = false;
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+            }
+        }
+        /**
+         * 添加好友
+         */
+        function addFriend() {
+            var taskName = '添加好友';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            var is_open_tool = thisScript.findMultiColor('式神录图标');
+            if (thisScript.oper({
+                name: '打开工具栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断菜单栏是否打开',
+                operator: [thisOperator[1]]
+            }) || is_open_tool) {
+                var tujian_icon = thisScript.findMultiColor('好友图标');
+                if (tujian_icon) {
+                    thisScript.regionClick([[tujian_icon.x + 20, tujian_icon.y + 20, tujian_icon.x + 30, tujian_icon.y + 30, 1000]]);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入添加好友界面，并点击输入框',
+                operator: [thisOperator[2], thisOperator[3]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断输入框是否打开',
+                operator: [{
+                        desc: thisOperator[4].desc
+                    }],
+            })) {
+                sleep(2000);
+                setClip(thisScript.initialGlobal.friends_list[thisScript.initialGlobal.friend_index]);
+                var et = className("EditText").findOne();
+                et.paste();
+                sleep(3000);
+                thisScript.keepScreen(true);
+                if (thisScript.oper({
+                    id: 65,
+                    name: '点击确定',
+                    operator: [thisOperator[4]],
+                })) {
+                    return true;
+                }
+            }
+            if (thisScript.oper({
+                id: 65,
+                name: '点击申请',
+                operator: [thisOperator[6]],
+            })) {
+                sleep(5000);
+                thisScript.keepScreen(true);
+                // 发送好友申请成功通知
+                var friendName = thisScript.initialGlobal.friends_list[thisScript.initialGlobal.friend_index];
+                if (friendName) {
+                    thisScript.doPush(thisScript, {
+                        text: "\u597D\u53CB\u7533\u8BF7\u6210\u529F\u901A\u77E5: ".concat(friendName),
+                        type: 0,
+                        message: {
+                            type: 'friend_applied',
+                            friend_name: friendName,
+                        }
+                    });
+                }
+                if (thisScript.oper({
+                    id: 65,
+                    name: '点击关闭',
+                    operator: [thisOperator[7]],
+                })) {
+                    thisScript.initialGlobal.friend_index++;
+                    return true;
+                }
+            }
+            if (!thisScript.oper({
+                id: 65,
+                name: '点击添加好友',
+                operator: [{
+                        desc: thisOperator[5].desc
+                    }],
+            }) && thisScript.oper({
+                id: 65,
+                name: '点击搜索',
+                operator: [{
+                        desc: thisOperator[8].desc
+                    }],
+            })) {
+                thisScript.oper({
+                    id: 65,
+                    name: '点击搜索',
+                    operator: [thisOperator[8]],
+                });
+                return true;
+            }
+            if (thisScript.oper({
+                id: 65,
+                name: '点击添加好友',
+                operator: [thisOperator[5]],
+            })) {
+                return true;
+            }
         }
         /**
          * 切换账号
@@ -37102,7 +38565,15 @@ var Func65 = /** @class */ (function () {
                 thisScript.initialGlobal.seizing_num = 0; //卡屏次数置0
                 thisScript.initGlobal(); //初始化全局变量
                 thisScript.initialGlobal.isInit = true; //初始化标记置为true
+                thisScript.initialGlobal.last_index = 0;
+                if (member.save_temp) {
+                    for (var key in member.save_temp) {
+                        thisScript.initialGlobal[key] = member.save_temp[key];
+                    }
+                    member.save_temp = {};
+                }
                 sleep(3000);
+                console.log('关闭游戏3');
                 thisScript.stopRelatedApp();
                 sleep(3000);
                 return false;
@@ -37211,6 +38682,12 @@ var Func65 = /** @class */ (function () {
                 thisScript.initialGlobal.app_is_open_flag++;
             }
             if (thisScript.oper({
+                name: '点击重新登录',
+                operator: [thisOperator[49]],
+            })) {
+                return false;
+            }
+            if (thisScript.oper({
                 name: '点击用户中心切换账号',
                 operator: [thisOperator[23]],
             })) {
@@ -37263,6 +38740,17 @@ var Func65 = /** @class */ (function () {
                         },
                     ],
                 })) {
+                    thisScript.initialGlobal.click_enter_times++;
+                    if (thisScript.initialGlobal.click_enter_times >= 3) {
+                        thisScript.initialGlobal.click_enter_times = 0;
+                        thisScript.initialGlobal.isInit = false;
+                        console.log('关闭游戏4');
+                        thisScript.stopRelatedApp();
+                        // 保存当前全局状态到member.save_temp
+                        saveGlobalToMember(thisScript, ['taskIndex', 'friends_list', 'friend_apply', 'tongxin_apply', 'approve_company_request', 'company_approval_completed']);
+                        sleep(15 * 60 * 1000);
+                        return true;
+                    }
                     return false;
                 }
             }
@@ -37287,7 +38775,7 @@ var Func65 = /** @class */ (function () {
                             }],
                     });
                     if (result.length === 0) {
-                        thisScript.myToast('未找到');
+                        console.log('未找到');
                         thisScript.keepScreen(true);
                         thisScript.initialGlobal.findAccountCount++;
                         return false;
@@ -37329,7 +38817,7 @@ var Func65 = /** @class */ (function () {
                             }],
                     });
                     if (result.length === 0) {
-                        thisScript.myToast('未找到');
+                        console.log('未找到');
                         thisScript.initialGlobal.findAccountCount++;
                         return false;
                     }
@@ -37440,6 +38928,7 @@ var Func65 = /** @class */ (function () {
                 sleep(1000);
                 return true;
             }
+            // console.log('thisScript.initialGlobal.account_input_flag',thisScript.initialGlobal.account_input_flag, member)
             if (!thisScript.initialGlobal.account_input_flag && thisScript.oper({
                 id: 65,
                 name: '检测到输入框已打开',
@@ -37447,8 +38936,18 @@ var Func65 = /** @class */ (function () {
             })) {
                 sleep(1000);
                 Text(member.account); // 输入账号
+                console.log('输入账号', member.account);
                 sleep(3000);
-                thisScript.initialGlobal.account_input_flag = true;
+                thisScript.keepScreen(true);
+                if (thisScript.oper({
+                    id: 65,
+                    name: '账号已输入',
+                    operator: [{
+                            desc: thisOperator[37].desc
+                        }],
+                })) {
+                    thisScript.initialGlobal.account_input_flag = true;
+                }
                 return true;
             }
             if (thisScript.initialGlobal.account_input_flag && !thisScript.oper({
@@ -37481,6 +38980,7 @@ var Func65 = /** @class */ (function () {
             })) {
                 sleep(1000);
                 Text(member.password); // 输入密码
+                console.log('输入密码', member.password);
                 sleep(3000);
                 return true;
             }
@@ -37568,7 +39068,7 @@ var Func65 = /** @class */ (function () {
         function switch_mingran_zhuti() {
             var taskName = '切换默认名染和主题';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
-            if (thisScript.initialGlobal.mingran_check && thisScript.initialGlobal.zhuti_check) {
+            if (thisScript.initialGlobal.mingran_check && thisScript.initialGlobal.zhuti_check && thisScript.initialGlobal.team_scene_check) {
                 thisScript.initialGlobal.taskIndex++;
                 return true;
             }
@@ -37605,8 +39105,8 @@ var Func65 = /** @class */ (function () {
                 thisScript.regionBezierSwipe(thisOperator[5].oper[1], thisOperator[5].oper[0], [1200, 1500], 0, 1000);
                 return true;
             }
-            if ((!thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click) &&
-                (!thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check)) {
+            if ((!thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click && !thisScript.initialGlobal.team_scene_click) &&
+                (!thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check && !thisScript.initialGlobal.team_scene_check)) {
                 var TextMatchMod = '模糊';
                 var Text_3 = '名染';
                 var result = thisScript.findTextWithCompareColor(Text_3, 3000, thisOperator[12].oper[0], TextMatchMod, {
@@ -37632,8 +39132,8 @@ var Func65 = /** @class */ (function () {
                     return true;
                 }
             }
-            else if ((thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click) &&
-                (thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check)) {
+            else if ((thisScript.initialGlobal.mingran_click && !thisScript.initialGlobal.zhuti_click && !thisScript.initialGlobal.team_scene_click) &&
+                (thisScript.initialGlobal.mingran_check && !thisScript.initialGlobal.zhuti_check && !thisScript.initialGlobal.team_scene_check)) {
                 var TextMatchMod = '包含';
                 var Text_4 = '主';
                 var result = thisScript.findTextWithCompareColor(Text_4, 3000, thisOperator[12].oper[0], TextMatchMod, {
@@ -37656,6 +39156,33 @@ var Func65 = /** @class */ (function () {
                     thisScript.regionClick([toClick]);
                     console.log('点击主题');
                     thisScript.initialGlobal.zhuti_click = true;
+                    return true;
+                }
+            }
+            else if ((thisScript.initialGlobal.mingran_click && thisScript.initialGlobal.zhuti_click && !thisScript.initialGlobal.team_scene_click) &&
+                (thisScript.initialGlobal.mingran_check && thisScript.initialGlobal.zhuti_check && !thisScript.initialGlobal.team_scene_check)) {
+                var TextMatchMod = '包含';
+                var Text_5 = '队场';
+                var result = thisScript.findTextWithCompareColor(Text_5, 3000, thisOperator[12].oper[0], TextMatchMod, {
+                    id: 65,
+                    name: '检测装饰页面',
+                    operator: [{
+                            desc: thisOperator[12].desc,
+                        }],
+                });
+                if (result.length > 0) {
+                    var x = (result[0].points[0].x + result[0].points[1].x) / 2;
+                    var y = (result[0].points[0].y + result[0].points[3].y) / 2;
+                    var toClick = [
+                        x,
+                        y,
+                        x + 10,
+                        y + 10,
+                        1200
+                    ];
+                    thisScript.regionClick([toClick]);
+                    console.log('点击组队场景');
+                    thisScript.initialGlobal.team_scene_click = true;
                     return true;
                 }
             }
@@ -37699,7 +39226,30 @@ var Func65 = /** @class */ (function () {
                         desc: thisOperator[10].desc
                     }]
             })) {
+                console.log('主题已关闭');
                 thisScript.initialGlobal.zhuti_check = true;
+                return true;
+            }
+            if (thisScript.oper({
+                name: '关闭组队场景试用',
+                operator: [thisOperator[13]]
+            })) {
+                sleep(2000);
+                return true;
+            }
+            if (!thisScript.initialGlobal.team_scene_check && thisScript.oper({
+                name: '判断组队场景是否关闭',
+                operator: [{
+                        desc: thisOperator[14].desc
+                    }]
+            }) && !thisScript.oper({
+                name: '判断组队场景是否关闭',
+                operator: [{
+                        desc: thisOperator[13].desc
+                    }]
+            })) {
+                console.log('组队场景已关闭');
+                thisScript.initialGlobal.team_scene_check = true;
                 return true;
             }
             return true;
@@ -37755,6 +39305,7 @@ var Func65 = /** @class */ (function () {
                 var company_icon = thisScript.findMultiColor('阴阳寮图标');
                 if (company_icon) {
                     thisScript.regionClick([[company_icon.x, company_icon.y, company_icon.x + 10, company_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -37795,6 +39346,72 @@ var Func65 = /** @class */ (function () {
                 return true;
             }
         }
+        function buy_buff() {
+            var taskName = '商店购买经验BUFF';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            if (thisScript.oper({
+                name: '关闭神秘商人对话',
+                operator: [thisOperator[6]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '打开菜单栏',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '进入商店',
+                operator: [thisOperator[1]]
+            })) {
+                var shop_icon = thisScript.findMultiColor('商店图标');
+                if (shop_icon) {
+                    thisScript.regionClick([[shop_icon.x, shop_icon.y, shop_icon.x + 10, shop_icon.y + 10, 1000]]);
+                    sleep(2000);
+                    return true;
+                }
+                return true;
+            }
+            if (thisScript.oper({
+                name: '点击杂货铺，点击特殊灯笼',
+                operator: [thisOperator[2], thisOperator[7], thisOperator[3]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '判断特殊灯笼是否亮起',
+                operator: [{
+                        desc: thisOperator[4].desc,
+                    }]
+            })) {
+                var good_icon = thisScript.findMultiColor('经验BUFF图标');
+                if (good_icon) {
+                    thisScript.regionClick([[good_icon.x, good_icon.y, good_icon.x + 10, good_icon.y + 10, 1000]]);
+                    sleep(2000);
+                    thisScript.keepScreen(true);
+                    if (thisScript.oper({
+                        name: '购买经验BUFF',
+                        operator: [thisOperator[5]]
+                    })) {
+                        thisScript.initialGlobal.taskIndex++;
+                        return true;
+                    }
+                    return true;
+                }
+                else if (thisScript.initialGlobal.swiper < 6) {
+                    thisScript.regionBezierSwipe(thisOperator[4].oper[0], thisOperator[4].oper[1], [1200, 1500], 0, 1000);
+                    thisScript.initialGlobal.swiper++;
+                    return true;
+                }
+                else if (thisScript.initialGlobal.swiper >= 6) {
+                    thisScript.initialGlobal.swiper = 0;
+                    thisScript.initialGlobal.taskIndex++;
+                    return true;
+                }
+                return true;
+            }
+        }
         function buy_gouyu() {
             var taskName = '商店购买永久勾玉卡';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
@@ -37817,6 +39434,7 @@ var Func65 = /** @class */ (function () {
                 var shop_icon = thisScript.findMultiColor('商店图标');
                 if (shop_icon) {
                     thisScript.regionClick([[shop_icon.x, shop_icon.y, shop_icon.x + 10, shop_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -37836,14 +39454,18 @@ var Func65 = /** @class */ (function () {
                 var good_icon = thisScript.findMultiColor('永久勾玉卡图标');
                 if (good_icon) {
                     thisScript.regionClick([[good_icon.x, good_icon.y, good_icon.x + 10, good_icon.y + 10, 1000]]);
-                    sleep(2000);
-                    thisScript.keepScreen(true);
-                    if (thisScript.oper({
-                        name: '购买永久勾玉卡',
-                        operator: [thisOperator[5]]
-                    })) {
-                        thisScript.initialGlobal.taskIndex++;
-                        return true;
+                    var is_buy = false;
+                    while (!is_buy) {
+                        sleep(2000);
+                        thisScript.keepScreen(true);
+                        if (thisScript.oper({
+                            name: '购买永久勾玉卡',
+                            operator: [thisOperator[5]]
+                        })) {
+                            is_buy = true;
+                            thisScript.initialGlobal.taskIndex++;
+                            return true;
+                        }
                     }
                     return true;
                 }
@@ -37864,8 +39486,15 @@ var Func65 = /** @class */ (function () {
             var taskName = '领邮件';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
             if (thisScript.oper({
-                name: '打开邮箱并领取',
-                operator: [thisOperator[0], thisOperator[1], thisOperator[2]]
+                name: '打开邮箱',
+                operator: [thisOperator[0]]
+            })) {
+                sleep(30 * 1000);
+                return true;
+            }
+            if (thisScript.oper({
+                name: '领取邮件',
+                operator: [thisOperator[1], thisOperator[2]]
             })) {
                 return true;
             }
@@ -37907,6 +39536,7 @@ var Func65 = /** @class */ (function () {
                         '庭院进入探索地图',
                         '打开经验BUFF',
                         '打第二章探索副本1次',
+                        '关闭BUFF',
                         '返回庭院',
                         '检测阴阳寮',
                     ];
@@ -37960,12 +39590,13 @@ var Func65 = /** @class */ (function () {
                                             thisScript.initialGlobal.taskIndex++;
                                         }
                                         else {
-                                            thisScript.myToast("\u5F53\u524D\u7B49\u7EA7".concat(num, "\u6BD4").concat(level, "\u5C0F"));
+                                            console.log("\u5F53\u524D\u7B49\u7EA7".concat(num, "\u6BD4").concat(level, "\u5C0F"));
                                             // 在当前任务索引后插入一系列任务
                                             var tasksToInsert = [
                                                 '庭院进入探索地图',
                                                 '打开经验BUFF',
                                                 '打最后一章探索副本5次',
+                                                '关闭BUFF',
                                                 '返回庭院',
                                                 '过剧情',
                                                 '返回庭院',
@@ -37998,12 +39629,13 @@ var Func65 = /** @class */ (function () {
                         thisScript.initialGlobal.taskIndex++;
                     }
                     else {
-                        thisScript.myToast("\u5F53\u524D\u7B49\u7EA7".concat(mostFrequentNum, "\u6BD4").concat(level, "\u5C0F"));
+                        console.log("\u5F53\u524D\u7B49\u7EA7".concat(mostFrequentNum, "\u6BD4").concat(level, "\u5C0F"));
                         // 在当前任务索引后插入一系列任务
                         var tasksToInsert = [
                             '庭院进入探索地图',
                             '打开经验BUFF',
                             '打最后一章探索副本5次',
+                            '关闭BUFF',
                             '返回庭院',
                             '过剧情',
                             '返回庭院',
@@ -38025,6 +39657,12 @@ var Func65 = /** @class */ (function () {
             var taskName = '买体力';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
             if (thisScript.oper({
+                name: '关闭多余弹窗',
+                operator: [thisOperator[5], thisOperator[6]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
                 name: '打开菜单栏',
                 operator: [thisOperator[0]]
             })) {
@@ -38037,6 +39675,7 @@ var Func65 = /** @class */ (function () {
                 var shop_icon = thisScript.findMultiColor('商店图标');
                 if (shop_icon) {
                     thisScript.regionClick([[shop_icon.x, shop_icon.y, shop_icon.x + 10, shop_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -38063,6 +39702,24 @@ var Func65 = /** @class */ (function () {
             if (thisScript.oper({
                 name: '购买体力礼包',
                 operator: [thisOperator[4]]
+            })) {
+                thisScript.initialGlobal.taskIndex++;
+                return true;
+            }
+            return true;
+        }
+        function buy_tili_60gou() {
+            var taskName = '买60勾体力';
+            var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            if (thisScript.oper({
+                name: '点击体力加号',
+                operator: [thisOperator[0]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
+                name: '点击60勾',
+                operator: [thisOperator[1]]
             })) {
                 thisScript.initialGlobal.taskIndex++;
                 return true;
@@ -38102,6 +39759,7 @@ var Func65 = /** @class */ (function () {
                 var zhenlv_icon = thisScript.findMultiColor('珍旅屋图标');
                 if (zhenlv_icon) {
                     thisScript.regionClick([[zhenlv_icon.x, zhenlv_icon.y, zhenlv_icon.x + 10, zhenlv_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -38132,23 +39790,6 @@ var Func65 = /** @class */ (function () {
                     return true;
                 }
                 sleep(2000);
-                if (!thisScript.oper({
-                    name: '判断是否借用式神',
-                    operator: [{
-                            desc: thisOperator[4].desc,
-                        }]
-                })) {
-                    if (thisScript.oper({
-                        name: '返回珍旅屋',
-                        operator: [{
-                                desc: thisOperator[3].desc,
-                                oper: thisOperator[4].oper
-                            }]
-                    })) {
-                        thisScript.initialGlobal.taskIndex++;
-                        return true;
-                    }
-                }
                 return true;
             }
             return true;
@@ -38318,6 +39959,14 @@ var Func65 = /** @class */ (function () {
                 get_achievement(true);
                 return true;
             }
+            else if (!thisScript.initialGlobal.chengjiu_doing && thisScript.initialGlobal.chengjiu_finish) {
+                if (thisScript.oper({
+                    name: '从成就返回',
+                    operator: [thisOperator[10]]
+                })) {
+                    return true;
+                }
+            }
             if (thisScript.oper({
                 name: '花合战',
                 operator: [thisOperator[0], thisOperator[2], thisOperator[6], thisOperator[9]]
@@ -38409,6 +40058,7 @@ var Func65 = /** @class */ (function () {
                 var shishen_icon = thisScript.findMultiColor('式神录图标');
                 if (shishen_icon) {
                     thisScript.regionClick([[shishen_icon.x, shishen_icon.y, shishen_icon.x + 10, shishen_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -38645,7 +40295,7 @@ var Func65 = /** @class */ (function () {
             if (thisScript.oper({
                 id: 37,
                 name: '检测是否为队伍公开权限弹窗/退出匹配弹窗',
-                operator: [thisOperator[2], thisOperator[3]],
+                operator: [thisOperator[6], thisOperator[2], thisOperator[3]],
             })) {
                 return true;
             }
@@ -38838,7 +40488,7 @@ var Func65 = /** @class */ (function () {
                 }, 0) || thisScript.oper({
                     id: 1,
                     name: '手动修正自动',
-                    operator: [thisOperator[1]]
+                    operator: [thisOperator[10]]
                 }, 1000)) {
                     thisScript.initialGlobal.tupo_is_prepare = true;
                     // 每点一次准备 重置一次红标状态
@@ -38877,7 +40527,7 @@ var Func65 = /** @class */ (function () {
             })) {
                 if (thisScript.initialGlobal.tupo_is_prepare) {
                     thisScript.initialGlobal.tupo_defeat_times++;
-                    thisScript.myToast("\u9000\u51FA".concat(thisScript.initialGlobal.tupo_defeat_times, "\u6B21"));
+                    console.log("\u9000\u51FA".concat(thisScript.initialGlobal.tupo_defeat_times, "\u6B21"));
                     if (!thisScript.initialGlobal.tupo_is_attack) {
                         if (thisScript.initialGlobal.tupo_defeat_times >= thisconfig.do_times) {
                             thisScript.initialGlobal.tupo_is_attack = true;
@@ -39080,16 +40730,13 @@ var Func65 = /** @class */ (function () {
             if ('个人突破' === thisconfig.type) {
                 return thisScript.oper({
                     name: '地图进入个人突破',
-                    operator: [{
-                            desc: thisOperator[0].desc,
-                            oper: [thisOperator[0].oper[0]]
-                        }, thisOperator[1]]
+                    operator: [thisOperator[1]]
                 });
             }
             else if ('寮突破' === thisconfig.type) {
                 return thisScript.oper({
                     name: '地图进入寮突破',
-                    operator: thisOperator
+                    operator: [thisOperator[2], thisOperator[1]]
                 });
             }
             return false;
@@ -39234,7 +40881,7 @@ var Func65 = /** @class */ (function () {
             if (thisScript.initialGlobal.last_operation_time !== null) {
                 var timeDiff = currentTime - thisScript.initialGlobal.last_operation_time;
                 if (timeDiff > 30 * 1000) { // 30秒
-                    thisScript.myToast('30秒未操作，切换下一个任务');
+                    console.log('30秒未操作，切换下一个任务');
                     if (thisScript.initialGlobal.fangshou_doing) {
                         thisScript.initialGlobal.fangshou_doing = false;
                         thisScript.initialGlobal.fangshou_list = [];
@@ -39258,6 +40905,12 @@ var Func65 = /** @class */ (function () {
                 thisScript.initialGlobal.yucheng_list = ['座敷', '雪女', '莹草', '鬼使黑', '姑获鸟', '白达摩'];
             }
             if (thisScript.oper({
+                name: '关闭叙勋榜',
+                operator: [thisOperator[10]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
                 name: '打开菜单栏',
                 operator: [thisOperator[0]]
             })) {
@@ -39270,6 +40923,7 @@ var Func65 = /** @class */ (function () {
                 var company_icon = thisScript.findMultiColor('阴阳寮图标');
                 if (company_icon) {
                     thisScript.regionClick([[company_icon.x, company_icon.y, company_icon.x + 10, company_icon.y + 10, 1000]]);
+                    sleep(2000);
                     thisScript.initialGlobal.last_operation_time = currentTime; // 更新操作时间
                     return true;
                 }
@@ -39473,6 +41127,7 @@ var Func65 = /** @class */ (function () {
                 var company_icon = thisScript.findMultiColor('阴阳寮图标');
                 if (company_icon) {
                     thisScript.regionClick([[company_icon.x, company_icon.y, company_icon.x + 10, company_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -39549,16 +41204,42 @@ var Func65 = /** @class */ (function () {
         function join_company() {
             var taskName = '加入阴阳寮';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
+            if (!thisScript.initialGlobal.is_joining_company) {
+                thisScript.initialGlobal.is_joining_company = true;
+                // 创建全局状态的副本并排除不需要同步的字段
+                var globalCopy = JSON.parse(JSON.stringify(thisScript.initialGlobal));
+                // 排除指定字段
+                delete globalCopy.seizing_num;
+                delete globalCopy.app_is_open_flag;
+                delete globalCopy.last_operation_time;
+                delete globalCopy.taskIndex;
+                thisScript.doPush(thisScript, {
+                    text: "\u4EFB\u52A1\u7D22\u5F15\u53D8\u66F4: ".concat(thisScript.initialGlobal.taskIndex),
+                    type: 0,
+                    message: {
+                        type: 'task_index_change',
+                        task_index: thisScript.initialGlobal.taskIndex,
+                        task_list: taskList,
+                        area: member.area,
+                        name: member.name,
+                        platform_type: member.platform_type,
+                        account: member.account,
+                        global: globalCopy // 发送排除特定字段后的全局状态数据
+                    }
+                });
+            }
             if (waiting_status) {
                 sleep(10000);
+                console.log('判断是否加入阴阳寮');
                 if (thisScript.oper({
                     name: '判断是否加入阴阳寮',
                     operator: [{
                             desc: thisOperator[7].desc,
                         }]
                 })) {
-                    thisScript.initialGlobal.taskIndex++;
                     waiting_status = false;
+                    thisScript.initialGlobal.is_joining_company = false;
+                    thisScript.initialGlobal.taskIndex++;
                     return true;
                 }
                 return true;
@@ -39576,6 +41257,7 @@ var Func65 = /** @class */ (function () {
                 var company_icon = thisScript.findMultiColor('阴阳寮图标');
                 if (company_icon) {
                     thisScript.regionClick([[company_icon.x, company_icon.y, company_icon.x + 10, company_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -39620,6 +41302,18 @@ var Func65 = /** @class */ (function () {
                 operator: [thisOperator[6]]
             })) {
                 waiting_status = true;
+                // 发送加入阴阳寮申请消息
+                thisScript.doPush(thisScript, {
+                    text: "\u53D1\u9001\u52A0\u5165\u9634\u9633\u5BEE\u7533\u8BF7: ".concat(member.company_name),
+                    type: 0,
+                    message: {
+                        type: 'company_join_request',
+                        member_id: member.member_id,
+                        member_name: member.name,
+                        company_name: member.company_name,
+                        timestamp: Date.now()
+                    }
+                });
                 return true;
             }
         }
@@ -39661,6 +41355,7 @@ var Func65 = /** @class */ (function () {
                 }
                 if (Date.now() - start_waiting > wait_time) {
                     waiting_status = false;
+                    thisScript.initialGlobal.is_approving = false;
                     thisScript.initialGlobal.taskIndex++;
                     return true;
                 }
@@ -39679,6 +41374,7 @@ var Func65 = /** @class */ (function () {
                 var company_icon = thisScript.findMultiColor('阴阳寮图标');
                 if (company_icon) {
                     thisScript.regionClick([[company_icon.x, company_icon.y, company_icon.x + 10, company_icon.y + 10, 1000]]);
+                    sleep(2000);
                     return true;
                 }
                 return true;
@@ -39852,6 +41548,7 @@ var Func65 = /** @class */ (function () {
                         desc: thisOperator[2].desc
                     }]
             })) {
+                console.log(thisScript.initialGlobal.shishen_list);
                 if (thisScript.initialGlobal.shishen_list && thisScript.initialGlobal.shishen_list.length > 0) {
                     // 获取第一个式神名称
                     var targetShishen = thisScript.initialGlobal.shishen_list[0];
@@ -39902,7 +41599,7 @@ var Func65 = /** @class */ (function () {
             }
             if (thisScript.oper({
                 name: '返回式神录',
-                operator: [thisOperator[1], thisOperator[2], thisOperator[3], thisOperator[4], thisOperator[5]]
+                operator: [thisOperator[1], thisOperator[2], thisOperator[3], thisOperator[4], thisOperator[5], thisOperator[6], thisOperator[7]]
             })) {
                 return true;
             }
@@ -40129,7 +41826,6 @@ var Func65 = /** @class */ (function () {
             if (thisScript.initialGlobal.last_operation_time !== null) {
                 var timeDiff = currentTime - thisScript.initialGlobal.last_operation_time;
                 if (timeDiff > 20 * 1000) { // 20秒
-                    thisScript.myToast('20秒未操作，切换下一个任务');
                     // 重置相关变量
                     thisScript.initialGlobal.last_operation_time = null;
                     var achievement_icon = thisScript.findMultiColor('成就_标签页');
@@ -40232,7 +41928,7 @@ var Func65 = /** @class */ (function () {
                 thisScript.initialGlobal.hitted_boss = false;
                 thisScript.initialGlobal.hitting_boss = false;
                 if (thisScript.initialGlobal.hitting_boss_num >= attack_num) {
-                    thisScript.myToast("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.hitting_boss_num, "\u6B21\uFF0C\u5207\u6362\u4EFB\u52A1"));
+                    console.log("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.hitting_boss_num, "\u6B21\uFF0C\u5207\u6362\u4EFB\u52A1"));
                     thisScript.initialGlobal.taskIndex++;
                     return false;
                 }
@@ -40311,7 +42007,7 @@ var Func65 = /** @class */ (function () {
                 thisScript.initialGlobal.hitted_boss = false;
                 thisScript.initialGlobal.hitting_boss = false;
                 if (thisScript.initialGlobal.hitting_boss_num >= attack_num) {
-                    thisScript.myToast("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.hitting_boss_num, "\u6B21\uFF0C\u5207\u6362\u4EFB\u52A1"));
+                    console.log("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.hitting_boss_num, "\u6B21\uFF0C\u5207\u6362\u4EFB\u52A1"));
                     thisScript.initialGlobal.taskIndex++;
                 }
                 return true;
@@ -40437,7 +42133,7 @@ var Func65 = /** @class */ (function () {
                         name: '探索界面_判断',
                         operator: [{ desc: thisOperator[0].desc }],
                     })) {
-                        thisScript.myToast("\u5269\u4F59\u6ED1\u5C4F\u6B21\u6570\uFF1A".concat(thisScript.initialGlobal.tsAttackSwhipeNum));
+                        console.log("\u5269\u4F59\u6ED1\u5C4F\u6B21\u6570\uFF1A".concat(thisScript.initialGlobal.tsAttackSwhipeNum));
                         if (!thisScript.initialGlobal.swipe_back) {
                             thisScript.regionBezierSwipe(thisOperator[0].oper[1], thisOperator[0].oper[2], {
                                 '快': [200, 400],
@@ -40502,7 +42198,7 @@ var Func65 = /** @class */ (function () {
                 }, 0) || thisScript.oper({
                     id: 1,
                     name: '手动修正自动',
-                    operator: [thisOperator[1], thisOperator[9]]
+                    operator: [thisOperator[1], thisOperator[9], thisOperator[10]]
                 }, 1000)) {
                     if (thisScript.initialGlobal.fight_start_time === null) {
                         thisScript.initialGlobal.fight_start_time = new Date().getTime();
@@ -40536,7 +42232,7 @@ var Func65 = /** @class */ (function () {
             })) {
                 if (thisScript.initialGlobal.fight_start_time) {
                     thisScript.initialGlobal.fight_start_time = null;
-                    thisScript.myToast('重置挑战时间');
+                    console.log('重置挑战时间');
                 }
                 return true;
             }
@@ -40548,7 +42244,7 @@ var Func65 = /** @class */ (function () {
                 console.log('体力不足');
                 if (thisScript.initialGlobal.fight_start_time) {
                     thisScript.initialGlobal.fight_start_time = null;
-                    thisScript.myToast('重置挑战时间');
+                    console.log('重置挑战时间');
                 }
                 if (conf && conf.no_sushi_switch_enabled) {
                     thisScript.initialGlobal.taskIndex++;
@@ -40576,7 +42272,7 @@ var Func65 = /** @class */ (function () {
             })) {
                 if (thisScript.initialGlobal.fight_start_time) {
                     thisScript.initialGlobal.fight_start_time = null;
-                    thisScript.myToast('重置挑战时间');
+                    console.log('重置挑战时间');
                 }
                 return true;
             }
@@ -40595,16 +42291,16 @@ var Func65 = /** @class */ (function () {
                 if (thisScript.initialGlobal.hitted_boss === false && thisScript.initialGlobal.hitting_boss === true) {
                     thisScript.initialGlobal.hitting_boss_num++;
                     thisScript.initialGlobal.hitted_boss = true;
-                    thisScript.myToast("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.hitting_boss_num, "\u6B21"));
+                    console.log("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.hitting_boss_num, "\u6B21"));
                 }
                 if (thisScript.initialGlobal.hitting_yuhun === true && thisScript.initialGlobal.hitted_yuhun == false) {
                     thisScript.initialGlobal.yuhun_attack_num++;
                     thisScript.initialGlobal.hitted_yuhun = true;
-                    thisScript.myToast("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.yuhun_attack_num, "\u6B21"));
+                    console.log("\u5DF2\u6311\u6218\u526F\u672C".concat(thisScript.initialGlobal.yuhun_attack_num, "\u6B21"));
                 }
                 if (thisScript.initialGlobal.fight_start_time) {
                     thisScript.initialGlobal.fight_start_time = null;
-                    thisScript.myToast('重置挑战时间');
+                    console.log('重置挑战时间');
                 }
                 return true;
             }
@@ -40618,6 +42314,12 @@ var Func65 = /** @class */ (function () {
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
             sleep(1000);
             thisScript.keepScreen(true);
+            if (thisScript.oper({
+                name: '关闭探索界面',
+                operator: [thisOperator[2]]
+            })) {
+                return true;
+            }
             if (thisScript.oper({
                 name: 'BUFF界面',
                 operator: [{
@@ -40674,7 +42376,7 @@ var Func65 = /** @class */ (function () {
                 thisScript.keepScreen(true);
                 var point = thisScript.findMultiColor("\u5173\u95ED\u7684BUFF_".concat(buff_type)) || null;
                 if (point) {
-                    thisScript.myToast("\u627E\u5230".concat(buff_type, "buff"));
+                    console.log("\u627E\u5230".concat(buff_type, "buff"));
                     thisScript.regionClick([
                         [point.x, point.y, point.x + thisOperator[0].oper[0][2], point.y + thisOperator[0].oper[0][3], 1000]
                     ]);
@@ -40696,6 +42398,12 @@ var Func65 = /** @class */ (function () {
             if (thisScript.oper({
                 name: '探索界面灰色',
                 operator: [thisOperator[4]]
+            })) {
+                return;
+            }
+            if (thisScript.oper({
+                name: '从觉醒/御魂界面返回',
+                operator: [thisOperator[5], thisOperator[6]]
             })) {
                 return;
             }
@@ -40863,7 +42571,19 @@ var Func65 = /** @class */ (function () {
                 name: '领取并分享式神',
                 operator: [thisOperator[8]]
             })) {
-                return true;
+                sleep(1000);
+                if (thisScript.initialGlobal.share_click_num < 3) {
+                    thisScript.initialGlobal.share_click_num++;
+                    return true;
+                }
+                else {
+                    thisScript.oper({
+                        name: '关闭式神皮肤展示',
+                        operator: [thisOperator[16]]
+                    });
+                    thisScript.initialGlobal.share_click_num = 0;
+                    return true;
+                }
             }
             else if (thisScript.oper({
                 name: '关闭式神皮肤展示',
@@ -40899,6 +42619,12 @@ var Func65 = /** @class */ (function () {
             // 检查是否超过3分钟没有操作
             var currentTime = Date.now();
             if (thisScript.oper({
+                name: '关闭福利合集',
+                operator: [thisOperator[11], thisOperator[12]]
+            })) {
+                return true;
+            }
+            if (thisScript.oper({
                 name: '等级不够，跳转下一个任务',
                 operator: [thisOperator[8]]
             })) {
@@ -40933,7 +42659,7 @@ var Func65 = /** @class */ (function () {
                                 desc: thisOperator[7].desc
                             }]
                     })) {
-                        thisScript.myToast('10秒无操作，切换下一个任务');
+                        console.log('10秒无操作，切换下一个任务');
                         // 重置相关变量
                         thisScript.initialGlobal.is_doing_plot = false;
                         thisScript.initialGlobal.last_operation_time = null;
@@ -41022,33 +42748,23 @@ var Func65 = /** @class */ (function () {
                 name: '灰色抽卡屋',
                 operator: [thisOperator[10]]
             })) {
-                var three_point_light = thisScript.findObject('three_point_light', 1000, [20, 118, 1280, 540], 0.1);
-                if (three_point_light.length > 0) {
+                // 只调用一次findObject，获取所有对象
+                var objects = thisScript.findObject('', 1000, [0, 100, 1280, 540], 0.15);
+                // 按照label对结果进行筛选
+                var plot_icon = objects.filter(function (obj) { return obj.label === 'three_point_light' || obj.label === 'question_mark' || obj.label === 'three_point'; });
+                // 处理three_point_light
+                if (plot_icon.length > 0) {
+                    if (!thisScript.oper({
+                        name: '剧情判断',
+                        operator: [thisOperator[0]]
+                    }) && (plot_icon[0].label === 'question_mark' || plot_icon[0].label === 'three_point')) {
+                        return;
+                    }
                     thisScript.initialGlobal.is_doing_plot = true;
-                    thisScript.regionClick([[three_point_light[0].x + 10, three_point_light[0].y + 10, three_point_light[0].x + three_point_light[0].width - 10, three_point_light[0].y + three_point_light[0].height - 10, 1000]]);
+                    thisScript.regionClick([[plot_icon[0].x + 5, plot_icon[0].y + 5, plot_icon[0].x + plot_icon[0].width - 5, plot_icon[0].y + plot_icon[0].height - 5, 1000]]);
                     thisScript.initialGlobal.last_operation_time = currentTime; // 更新操作时间
+                    sleep(1000);
                     return true;
-                }
-                if (thisScript.oper({
-                    name: '剧情判断',
-                    operator: [thisOperator[0]]
-                })) {
-                    var three_point = thisScript.findObject('three_point', 1000, [0, 118, 1280, 540], 0.1);
-                    if (three_point.length > 0) {
-                        thisScript.initialGlobal.is_doing_plot = true;
-                        thisScript.regionClick([[three_point[0].x + 10, three_point[0].y + 10, three_point[0].x + three_point[0].width - 10, three_point[0].y + three_point[0].height - 10, 1000]]);
-                        thisScript.initialGlobal.last_operation_time = currentTime; // 更新操作时间
-                        sleep(1000);
-                        thisScript.keepScreen(true);
-                    }
-                    var question_mark = thisScript.findObject('question_mark', 1000, [0, 118, 1280, 540], 0.1);
-                    if (question_mark.length > 0) {
-                        thisScript.initialGlobal.is_doing_plot = true;
-                        thisScript.regionClick([[question_mark[0].x + 10, question_mark[0].y + 10, question_mark[0].x + question_mark[0].width - 10, question_mark[0].y + question_mark[0].height - 10, 1000]]);
-                        thisScript.initialGlobal.last_operation_time = currentTime; // 更新操作时间
-                        sleep(1000);
-                        thisScript.keepScreen(true);
-                    }
                 }
             }
         }
@@ -41061,15 +42777,15 @@ var Func65 = /** @class */ (function () {
             var newTaskConfig = thisOperator.slice(0, 28);
             if (thisScript.oper({
                 name: '过剧情',
-                operator: newTaskConfig
+                operator: __spreadArray(__spreadArray([], newTaskConfig, true), [thisOperator[34], thisOperator[35]], false)
             })) {
                 thisScript.initialGlobal.is_doing_plot = true;
                 return false;
             }
-            if (thisScript.oper({
+            if (!thisScript.initialGlobal.click_zhaohuan && thisScript.oper({
                 id: 65,
-                name: '补充点击',
-                operator: [thisOperator[32]]
+                name: '点击召唤灯笼',
+                operator: [thisOperator[32], thisOperator[33]]
             })) {
                 thisScript.initialGlobal.is_doing_plot = true;
                 return true;
@@ -41080,6 +42796,7 @@ var Func65 = /** @class */ (function () {
                         desc: thisOperator[28].desc
                     }]
             })) {
+                thisScript.initialGlobal.click_zhaohuan = true;
                 thisScript.initialGlobal.is_doing_plot = true;
                 thisScript.regionBezierSwipe(thisOperator[28].oper[0], thisOperator[28].oper[1], [500, 700], 0, 200);
                 sleep(1000);
@@ -41143,6 +42860,7 @@ var Func65 = /** @class */ (function () {
             thisScript.initialGlobal.scroll = true;
             thisScript.initialGlobal.test_juqing_back = false;
             thisScript.initialGlobal.test_back_num = 0;
+            thisScript.initialGlobal.is_joining_company = false;
             var taskName = '返回庭院';
             var thisOperator = thisScript.formatOperate(_initialConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
             sleep(1000);
@@ -41205,26 +42923,61 @@ var Func65 = /** @class */ (function () {
                             }]
                     })) {
                         console.log('已经回到庭院,并打开工具栏');
-                        thisScript.myToast('已经回到庭院,并打开工具栏');
                         sleep(2000);
                         if (!wait) {
                             thisScript.initialGlobal.taskIndex++;
                         }
                         return true;
                     }
-                    // thisScript.myToast(`${thisScript.initialGlobal.delaySecond}秒后发起心跳`);
+                    // console.log(`${thisScript.initialGlobal.delaySecond}秒后发起心跳`);
                     if (thisScript.initialGlobal.isInHome == true) {
                         sleep(1000);
-                        if (change) {
+                        if (change || thisScript.initialGlobal.company_approval_completed) {
                             console.log('任务都做完了！');
+                            thisScript.initialGlobal.company_approval_completed = false;
                             thisScript.initialGlobal.isInit = false;
+                            thisScript.initialGlobal.taskIndex = 0;
+                            taskList = [];
+                            // 向服务器发送切换账号请求
+                            thisScript.doPush(thisScript, {
+                                text: "\u4EFB\u52A1\u6267\u884C\u5B8C\u6210\uFF0C\u8BF7\u6C42\u5207\u6362\u8D26\u53F7",
+                                type: 0,
+                                message: {
+                                    type: 'switch_account_request',
+                                    member_id: member.member_id,
+                                    simulator_id: thisScript.device.id || '',
+                                    name: member.name,
+                                    account: member.account
+                                }
+                            });
+                            member = {
+                                account: '',
+                                password: '',
+                                name: '',
+                                area: '',
+                                platform_type: 'android',
+                                area_search_name: '',
+                                company_role: '',
+                                company_name: '',
+                                member_id: '',
+                                company_id: '',
+                                tongxin_name: '',
+                                company_created: false,
+                                tongxin_role: -1,
+                                all_members_added: false,
+                                save_temp: {} // 用于临时保存全局状态
+                            };
+                            console.log('关闭游戏5');
+                            thisScript.stopRelatedApp();
+                            thisScript.stop();
+                            console.log('停止脚本');
                             return true;
                         }
                         if (!wait) {
                             thisScript.initialGlobal.taskIndex++;
                         }
                         else {
-                            thisScript.myToast('已经回到庭院,等待下一步操作');
+                            console.log('已经回到庭院,等待下一步操作');
                         }
                         return true;
                     }
@@ -41234,6 +42987,34 @@ var Func65 = /** @class */ (function () {
                 }
             }
             return false;
+        }
+        /**
+         * 将initialGlobal中的字段保存到member的save_temp中
+         * @param thisScript 脚本实例
+         * @param fields 需要保存的字段数组，不传则保存所有字段
+         */
+        function saveGlobalToMember(thisScript, fields) {
+            if (!member.save_temp) {
+                member.save_temp = {};
+            }
+            if (fields && Array.isArray(fields)) {
+                // 保存指定字段
+                fields.forEach(function (field) {
+                    if (thisScript.initialGlobal.hasOwnProperty(field)) {
+                        member.save_temp[field] = thisScript.initialGlobal[field];
+                    }
+                });
+            }
+            else {
+                // 保存所有字段
+                for (var key in thisScript.initialGlobal) {
+                    if (thisScript.initialGlobal.hasOwnProperty(key)) {
+                        member.save_temp[key] = thisScript.initialGlobal[key];
+                    }
+                }
+            }
+            console.log("\u5DF2\u4FDD\u5B58".concat(fields ? fields.length : '全部', "\u4E2A\u5B57\u6BB5\u5230member.save_temp\u4E2D"));
+            return member.save_temp;
         }
         return false;
     };
@@ -69127,7 +70908,7 @@ var initialConfig = {
                 ]
             ],
             oper: [
-                [left, 1280, 720, 575, 658, 752, 720, 1000] // 关闭对话框
+                [left, 1280, 720, 131, 627, 258, 685, 1000] // 关闭对话框
             ]
         },
         {
@@ -69144,7 +70925,7 @@ var initialConfig = {
                 ]
             ],
             oper: [
-                [left, 1280, 720, 575, 658, 752, 720, 1000] // 关闭剧情式神介绍面板
+                [left, 1280, 720, 18, 138, 135, 220, 1000] // 关闭剧情式神介绍面板
             ]
         },
         {
@@ -69905,6 +71686,60 @@ var initialConfig = {
                 [left, 1280, 720, 673, 392, 806, 454, 1000] // 点击确认
             ]
         },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 54, 64, 0xb3936c],
+                    [left, 70, 57, 0xbea077],
+                    [left, 57, 47, 0xccaf84],
+                    [left, 128, 47, 0xc4a57c],
+                    [left, 124, 64, 0xb0916a],
+                    [left, 138, 64, 0xb1926a],
+                    [left, 188, 45, 0xcbae84],
+                    [left, 214, 45, 0xccaf86],
+                    [left, 261, 52, 0xbfa178],
+                    [left, 285, 52, 0xbc9f76],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 40, 41, 72, 68, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 402, 81, 0x861929],
+                    [center, 411, 80, 0x881a29],
+                    [center, 392, 84, 0x421418],
+                    [center, 385, 70, 0xefd2bd],
+                    [center, 427, 100, 0x841827],
+                    [center, 421, 105, 0xb12535],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 650, 28, 735, 86, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 545, 415, 0xfb4f4f],
+                    [center, 714, 425, 0xfb4f4f],
+                    [center, 724, 425, 0xfb4f4f],
+                    [center, 731, 457, 0xfb4f4f],
+                    [center, 868, 258, 0xf9fafd],
+                    [center, 780, 331, 0x4a4948],
+                    [center, 482, 315, 0x4a4948],
+                    [center, 548, 421, 0xfb4f4f],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 560, 414, 712, 458, 1000] // 点击重新登录
+            ]
+        },
     ],
     '获取绘卷排名': [
         {
@@ -70051,6 +71886,722 @@ var initialConfig = {
             ]
         },
     ],
+    '同心队预存式神': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1208, 608, 0x6c402a],
+                    [right, 1190, 643, 0x61180f],
+                    [right, 1203, 653, 0x62180e],
+                    [right, 1182, 678, 0xd1ad7b],
+                    [right, 1168, 685, 0x74191f],
+                    [right, 1181, 691, 0xd25555],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 140, 8, 0xf8d7ab],
+                    [left, 156, 16, 0xf8d07a],
+                    [left, 142, 25, 0xd4ba46],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1185, 628, 1211, 668, 1000] // 打开菜单
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1223, 617, 0xa78054],
+                    [right, 1230, 645, 0xc6b7b6],
+                    [right, 1225, 680, 0xe1c188],
+                    [right, 1223, 701, 0x471512],
+                    [right, 1222, 601, 0x9a3e34],
+                    [left, 141, 8, 0xf8d7ab],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 156, 17, 0xf9d27f],
+                    [left, 140, 25, 0xd4ba46],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 58, 592, 0xbb4949],
+                    [left, 85, 595, 0x8a8c96],
+                    [left, 104, 598, 0x89899b],
+                    [left, 110, 607, 0x707385],
+                    [left, 102, 624, 0x99a3ad],
+                    [left, 62, 625, 0xdab8a6],
+                    [left, 42, 30, 0xae7a43],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 61, 574, 106, 644, 1000] // 点击左下角同心队图标
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1194, 565, 0x918473],
+                    [center, 757, 141, 0xa2978c],
+                    [center, 561, 92, 0x36241f],
+                    [left, 52, 40, 0xa36d37],
+                    [right, 1255, 395, 0x2f2222],
+                    [left, 41, 152, 0x222028],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1227, 208, 1258, 548, 1000], // 点击空白
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 184, 142, 0xb99d65],
+                    [right, 1092, 147, 0x89663a],
+                    [center, 928, 274, 0xe2ab78],
+                    [right, 968, 298, 0xefc194],
+                    [center, 942, 292, 0x513927],
+                    [right, 1098, 142, 0xb99d66],
+                    [right, 1125, 337, 0x6f352d],
+                    [left, 152, 411, 0x783b32],
+                    [left, 215, 124, 0x75382f],
+                    [right, 1011, 111, 0x72372e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 930, 267, 962, 307, 1000], // 点击按钮
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 38, 38, 0xfff4bd],
+                    [left, 250, 40, 0x583716],
+                    [right, 1127, 21, 0x6b4530],
+                    [right, 1042, 691, 0x48241b],
+                    [center, 347, 698, 0x49231a],
+                    [center, 422, 582, 0xffcb61],
+                    [center, 567, 581, 0xffd169],
+                    [right, 1220, 482, 0xba9463],
+                    [right, 1202, 602, 0x914134],
+                    [right, 1148, 570, 0xbfa89e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1200, 514, 1228, 572, 1000],
+                [left, 1280, 720, 418, 565, 575, 606, 1000], // 预存式神
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 682, 407, 0x94362d],
+                    [center, 821, 421, 0xf3b25e],
+                    [center, 590, 414, 0xdf6851],
+                    [center, 452, 408, 0xc55247],
+                    [center, 414, 225, 0x604132],
+                    [center, 844, 224, 0x6f4b39],
+                    [center, 827, 495, 0x6d4a38],
+                    [center, 467, 491, 0x442d20],
+                    [center, 812, 420, 0xf3b25e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 695, 405, 819, 450, 1000], // 点击确定
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 278, 94, 0x7e4940],
+                    [left, 178, 114, 0xdfccb4],
+                    [center, 567, 87, 0xead8c0],
+                    [center, 752, 91, 0xe8dac0],
+                    [right, 1075, 117, 0xeadeca],
+                    [right, 1124, 210, 0xe9dec9],
+                    [right, 1121, 467, 0xdccab4],
+                    [left, 171, 380, 0xe7dbc7],
+                    [right, 1160, 582, 0xf2cc97],
+                    [right, 1125, 612, 0xf1c88d],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1114, 564, 1176, 631, 1000], // 点击保存
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 278, 94, 0x7e4940],
+                    [left, 178, 114, 0xdfccb4],
+                    [center, 567, 87, 0xead8c0],
+                    [center, 752, 91, 0xe8dac0],
+                    [right, 1075, 117, 0xeadeca],
+                    [right, 1124, 210, 0xe9dec9],
+                    [right, 1121, 467, 0xdccab4],
+                    [left, 171, 380, 0xe7dbc7],
+                    [right, 1160, 582, 0xf2cc97],
+                    [right, 1125, 612, 0xf1c88d],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1114, 78, 1146, 113, 1000], // 关闭
+            ]
+        },
+    ],
+    '创建同心队': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1208, 608, 0x6c402a],
+                    [right, 1190, 643, 0x61180f],
+                    [right, 1203, 653, 0x62180e],
+                    [right, 1182, 678, 0xd1ad7b],
+                    [right, 1168, 685, 0x74191f],
+                    [right, 1181, 691, 0xd25555],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 140, 8, 0xf8d7ab],
+                    [left, 156, 16, 0xf8d07a],
+                    [left, 142, 25, 0xd4ba46],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1185, 628, 1211, 668, 1000] // 打开菜单
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1223, 617, 0xa78054],
+                    [right, 1230, 645, 0xc6b7b6],
+                    [right, 1225, 680, 0xe1c188],
+                    [right, 1223, 701, 0x471512],
+                    [right, 1222, 601, 0x9a3e34],
+                    [left, 141, 8, 0xf8d7ab],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 156, 17, 0xf9d27f],
+                    [left, 140, 25, 0xd4ba46],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 58, 592, 0xbb4949],
+                    [left, 85, 595, 0x8a8c96],
+                    [left, 104, 598, 0x89899b],
+                    [left, 110, 607, 0x707385],
+                    [left, 102, 624, 0x99a3ad],
+                    [left, 62, 625, 0xdab8a6],
+                    [left, 42, 30, 0xae7a43],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 61, 574, 106, 644, 1000] // 点击左下角同心队图标
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1037, 110, 0x70362d],
+                    [left, 314, 72, 0x956e40],
+                    [left, 148, 127, 0x4a1b1b],
+                    [right, 1122, 214, 0x682f28],
+                    [left, 151, 322, 0x773b31],
+                    [right, 1127, 605, 0xa5704f],
+                    [right, 1142, 604, 0xa87351],
+                    [right, 1155, 671, 0xede4cb],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1098, 620, 1165, 698, 1000] // 点击右下角创建队伍
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 564, 220, 0xc67564],
+                    [center, 611, 207, 0xedddc3],
+                    [center, 810, 215, 0xd29e8a],
+                    [center, 778, 214, 0xf0e0c5],
+                    [center, 887, 224, 0xc8b8a7],
+                    [center, 578, 467, 0xd8a088],
+                    [center, 874, 480, 0xfec861],
+                    [center, 491, 348, 0xc3bdb5],
+                    [center, 492, 344, 0xc2bbb4],
+                    [center, 490, 337, 0xbeb7b0],
+                    [center, 535, 347, 0xc4bdb6],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 477, 324, 591, 359, 1000] // 点击输入框
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1112, 7, 0x0a0b0c],
+                    [right, 1247, 10, 0xd6d7d7],
+                    [right, 1000, 48, 0x009587],
+                    [right, 1118, 27, 0xd6d7d7],
+                    [right, 1248, 27, 0xd6d7d7],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1030, 12, 1130, 53, 1000] // 点击确定
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 557, 218, 0xbd6959],
+                    [center, 818, 210, 0xd29d8b],
+                    [center, 894, 274, 0xe0d6c6],
+                    [center, 441, 268, 0xe4dbcd],
+                    [center, 465, 478, 0xd49982],
+                    [center, 757, 472, 0xffbf56],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 745, 458, 892, 498, 1000] // 点击创建
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1131, 545, 0x74382f],
+                    [center, 808, 417, 0xeed7b9],
+                    [center, 458, 401, 0xf3e3cf],
+                    [center, 774, 61, 0x74372e],
+                    [left, 247, 107, 0x6e342c],
+                    [left, 201, 392, 0xe6d1be],
+                    [right, 1058, 398, 0xf1dec4],
+                    [right, 1195, 145, 0x6e472a],
+                    [right, 1125, 415, 0x6f352d],
+                    [center, 558, 400, 0x7b5e49],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 498, 364, 712, 436, 1000] // 点击邀请好友
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 378, 91, 0x84605a],
+                    [center, 441, 81, 0x7c5d5b],
+                    [center, 457, 104, 0x9a6f61],
+                    [center, 384, 127, 0xb7805e],
+                    [center, 458, 124, 0xb8805f],
+                    [center, 938, 77, 0xc0ad9f],
+                    [center, 862, 70, 0x2b1410],
+                    [center, 928, 107, 0xc9b99c],
+                    [center, 841, 574, 0xffd470],
+                    [center, 574, 574, 0xd9a38b],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 375, 78, 460, 129, 1000], // 点击好友
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 917, 107, 0xcab99c],
+                    [right, 974, 74, 0x875045],
+                    [center, 370, 601, 0xdacbba],
+                    [center, 478, 588, 0xdaa48d],
+                    [center, 730, 582, 0xffd36e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 472, 198, 627, 268, 2000],
+                [left, 1280, 720, 758, 198, 893, 268, 2000],
+                [left, 1280, 720, 465, 291, 612, 341, 2000],
+                [left, 1280, 720, 770, 294, 901, 338, 2000],
+                [left, 1280, 720, 712, 561, 860, 601, 2000], // 邀请
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1194, 565, 0x918473],
+                    [center, 757, 141, 0xa2978c],
+                    [center, 561, 92, 0x36241f],
+                    [left, 52, 40, 0xa36d37],
+                    [right, 1255, 395, 0x2f2222],
+                    [left, 41, 152, 0x222028],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1227, 208, 1258, 548, 1000], // 点击空白
+            ]
+        },
+    ],
+    '加入同心队': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1208, 608, 0x6c402a],
+                    [right, 1190, 643, 0x61180f],
+                    [right, 1203, 653, 0x62180e],
+                    [right, 1182, 678, 0xd1ad7b],
+                    [right, 1168, 685, 0x74191f],
+                    [right, 1181, 691, 0xd25555],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 140, 8, 0xf8d7ab],
+                    [left, 156, 16, 0xf8d07a],
+                    [left, 142, 25, 0xd4ba46],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1185, 628, 1211, 668, 1000] // 打开菜单
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1223, 617, 0xa78054],
+                    [right, 1230, 645, 0xc6b7b6],
+                    [right, 1225, 680, 0xe1c188],
+                    [right, 1223, 701, 0x471512],
+                    [right, 1222, 601, 0x9a3e34],
+                    [left, 141, 8, 0xf8d7ab],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 156, 17, 0xf9d27f],
+                    [left, 140, 25, 0xd4ba46],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 58, 592, 0xbb4949],
+                    [left, 85, 595, 0x8a8c96],
+                    [left, 104, 598, 0x89899b],
+                    [left, 110, 607, 0x707385],
+                    [left, 102, 624, 0x99a3ad],
+                    [left, 62, 625, 0xdab8a6],
+                    [left, 42, 30, 0xae7a43],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 277, 117, 0x6e4b39],
+                    [right, 977, 118, 0x674534],
+                    [center, 857, 172, 0xdd6f5e],
+                    [center, 941, 177, 0x5cb867],
+                    [center, 954, 170, 0x60ba6b],
+                    [center, 860, 174, 0xdb6e5b],
+                    [center, 570, 157, 0xcbb59c],
+                    [center, 675, 221, 0xa3917d],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 924, 151, 969, 198, 1000] // 点击绿色对钩
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 47, 37, 0xf6e5a5],
+                    [right, 1214, 142, 0x6c4527],
+                    [left, 74, 147, 0x987241],
+                    [left, 274, 147, 0x6c342d],
+                    [right, 1132, 515, 0x793c32],
+                    [left, 157, 528, 0x71362e],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1194, 565, 0x918473],
+                    [center, 757, 141, 0xa2978c],
+                    [center, 561, 92, 0x36241f],
+                    [left, 52, 40, 0xa36d37],
+                    [right, 1255, 395, 0x2f2222],
+                    [left, 41, 152, 0x222028],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1227, 208, 1258, 548, 1000], // 点击空白
+            ]
+        },
+    ],
+    '审批好友': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1208, 608, 0x6c402a],
+                    [right, 1190, 643, 0x61180f],
+                    [right, 1203, 653, 0x62180e],
+                    [right, 1182, 678, 0xd1ad7b],
+                    [right, 1168, 685, 0x74191f],
+                    [right, 1181, 691, 0xd25555],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 140, 8, 0xf8d7ab],
+                    [left, 156, 16, 0xf8d07a],
+                    [left, 142, 25, 0xd4ba46],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1185, 628, 1211, 668, 1000] // 打开菜单
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1223, 617, 0xa78054],
+                    [right, 1230, 645, 0xc6b7b6],
+                    [right, 1225, 680, 0xe1c188],
+                    [right, 1223, 701, 0x471512],
+                    [right, 1222, 601, 0x9a3e34],
+                    [left, 141, 8, 0xf8d7ab],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 156, 17, 0xf9d27f],
+                    [left, 140, 25, 0xd4ba46],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 288, 48, 0x3c3a40],
+                    [center, 882, 45, 0x3d3b41],
+                    [center, 651, 14, 0x49474f],
+                    [right, 1197, 284, 0x322115],
+                    [right, 1200, 318, 0x66452d],
+                    [right, 1242, 315, 0x553622],
+                    [right, 1244, 368, 0x553723],
+                    [right, 1194, 365, 0x705039],
+                    [right, 1172, 100, 0x613037],
+                    [right, 1174, 131, 0x783c47],
+                    [right, 1168, 657, 0x4b3b2c],
+                    [left, 108, 327, 0x795f50],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1195, 278, 1247, 379, 1000] // 点击添加tab
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 181, 47, 0x3e3d43],
+                    [center, 677, 11, 0x524f57],
+                    [right, 1061, 62, 0x4c2c24],
+                    [right, 1197, 302, 0xe6d7be],
+                    [right, 1204, 331, 0x8f5422],
+                    [right, 1198, 358, 0x8c5221],
+                    [center, 555, 205, 0x963e45],
+                    [left, 158, 192, 0xc0b1a9],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 614, 242, 1012, 286, 1000],
+                [left, 1280, 720, 615, 432, 1026, 490, 1000] // 下
+            ],
+        },
+    ],
+    '添加好友': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1208, 608, 0x6c402a],
+                    [right, 1190, 643, 0x61180f],
+                    [right, 1203, 653, 0x62180e],
+                    [right, 1182, 678, 0xd1ad7b],
+                    [right, 1168, 685, 0x74191f],
+                    [right, 1181, 691, 0xd25555],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 140, 8, 0xf8d7ab],
+                    [left, 156, 16, 0xf8d07a],
+                    [left, 142, 25, 0xd4ba46],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1185, 628, 1211, 668, 1000] // 打开菜单
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1223, 617, 0xa78054],
+                    [right, 1230, 645, 0xc6b7b6],
+                    [right, 1225, 680, 0xe1c188],
+                    [right, 1223, 701, 0x471512],
+                    [right, 1222, 601, 0x9a3e34],
+                    [left, 141, 8, 0xf8d7ab],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 156, 17, 0xf9d27f],
+                    [left, 140, 25, 0xd4ba46],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 288, 48, 0x3c3a40],
+                    [center, 882, 45, 0x3d3b41],
+                    [center, 651, 14, 0x49474f],
+                    [right, 1197, 284, 0x322115],
+                    [right, 1200, 318, 0x66452d],
+                    [right, 1242, 315, 0x553622],
+                    [right, 1244, 368, 0x553723],
+                    [right, 1194, 365, 0x705039],
+                    [right, 1172, 100, 0x613037],
+                    [right, 1174, 131, 0x783c47],
+                    [right, 1168, 657, 0x4b3b2c],
+                    [left, 108, 327, 0x795f50],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1195, 278, 1247, 379, 1000] // 点击添加tab
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1201, 291, 0x814f24],
+                    [right, 1228, 331, 0xb9651a],
+                    [right, 1210, 327, 0x99581f],
+                    [right, 1171, 92, 0x5a272b],
+                    [right, 1097, 138, 0xf3b25e],
+                    [center, 331, 131, 0x4f3a3a],
+                    [center, 392, 134, 0xafa9a3],
+                    [center, 384, 132, 0xb2aca6],
+                    [center, 388, 132, 0xada7a1],
+                    [center, 388, 137, 0x9e9892],
+                    [center, 404, 134, 0x9b9690],
+                    [right, 1091, 115, 0xf3b25f],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 371, 120, 553, 155, 1000] // 点击输入框
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1035, 27, 0xd6d7d7],
+                    [right, 1124, 28, 0xd6d7d7],
+                    [right, 1248, 30, 0xd6d7d7],
+                    [right, 1157, 38, 0xd6d7d7],
+                    [center, 872, 48, 0x009587],
+                    [center, 771, 48, 0x009688],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1032, 21, 1127, 55, 1000] // 点击确认
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 460, 280, 0xccab81],
+                    [center, 478, 252, 0x342c27],
+                    [center, 444, 272, 0x3d322b],
+                    [center, 472, 364, 0xbbafa4],
+                    [center, 454, 355, 0xbbafa4],
+                    [center, 497, 358, 0xbbafa4],
+                    [center, 464, 374, 0xbbafa4],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 452, 260, 484, 294, 1000] // 添加好友
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 465, 240, 0x9e876d],
+                    [center, 794, 242, 0x9e876d],
+                    [center, 574, 435, 0xf3b25e],
+                    [center, 717, 441, 0xf3b25e],
+                    [center, 721, 345, 0xe3dcd4],
+                    [center, 817, 304, 0xcbb59c],
+                    [center, 850, 214, 0x402b1d],
+                    [center, 432, 214, 0x462b1f],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 691, 418, 816, 469, 1000] // 点击申请
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 134, 41, 0x545351],
+                    [right, 1068, 47, 0x434147],
+                    [center, 681, 14, 0x4a4850],
+                    [right, 1202, 287, 0x7b4b23],
+                    [right, 1198, 367, 0x8a5122],
+                    [right, 1190, 112, 0xa33f69],
+                    [right, 1160, 112, 0x723438],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1158, 98, 1192, 133, 1000] // 点击关闭
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1104, 128, 0xf3b25e],
+                    [right, 1014, 132, 0xf3b25e],
+                    [right, 961, 144, 0xc7c6ab],
+                    [center, 948, 131, 0xbdb0a4],
+                    [center, 958, 132, 0xc8bdb2],
+                    [right, 1018, 137, 0xf3b25e],
+                    [right, 1102, 137, 0xf3b25e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1005, 114, 1120, 158, 1000] // 点击搜索
+            ],
+        },
+    ],
     '切换默认名染和主题': [
         {
             desc: [
@@ -70119,7 +72670,7 @@ var initialConfig = {
                 ]
             ],
             oper: [
-                [left, 1280, 720, 768, 647, 816, 697, 1000] // 点击装饰
+                [left, 1280, 720, 675, 647, 725, 697, 1000] // 点击外观
             ]
         },
         {
@@ -70137,7 +72688,7 @@ var initialConfig = {
                 ]
             ],
             oper: [
-                [left, 1280, 720, 768, 647, 816, 697, 1000] // 点击装饰
+                [left, 1280, 720, 675, 647, 725, 697, 1000] // 点击外观
             ]
         },
         {
@@ -70163,47 +72714,51 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [right, 1147, 608, 0xe19536],
-                    [center, 878, 601, 0x7c654c],
-                    [center, 858, 602, 0x635142],
-                    [center, 711, 540, 0x876628],
-                    [center, 710, 586, 0xe3d1c1],
-                    [center, 382, 160, 0xbde4e8],
+                    [right, 1157, 624, 0xeda744],
+                    [right, 1161, 631, 0xe69c3a],
+                    [right, 1160, 624, 0xe8a03e],
+                    [right, 1144, 627, 0xf1a138],
+                    [center, 655, 644, 0x917454],
+                    [center, 454, 630, 0x897252],
+                    [center, 390, 645, 0x856c4d],
+                    [right, 1237, 628, 0x493e2b],
+                    [right, 1234, 357, 0x483827],
                 ]
             ],
             oper: [
-                [left, 1280, 720, 1141, 593, 1182, 614, 1000]
+                [left, 1280, 720, 1147, 617, 1184, 642, 1000]
             ]
         },
         {
             desc: [
                 1280, 720,
                 [
-                    [center, 708, 537, 0x6c4e23],
-                    [center, 718, 595, 0xe3d1c1],
-                    [center, 873, 606, 0x7c654c],
-                    [right, 1177, 598, 0x7c654c],
-                    [center, 848, 607, 0x9e9a7c],
-                    [center, 376, 161, 0xfffffb],
-                    [center, 380, 156, 0x26a0b6],
-                    [center, 512, 168, 0x118ca9],
-                    [center, 501, 156, 0x259db1],
+                    [right, 1181, 628, 0x826a4f],
+                    [right, 1151, 631, 0xa4a182],
+                    [right, 1147, 638, 0x291b10],
+                    [right, 1162, 638, 0x90866c],
+                    [right, 1175, 632, 0x826a4f],
+                    [center, 391, 265, 0xffffff],
+                    [center, 394, 248, 0x2b9db5],
+                    [center, 385, 248, 0x1e8098],
+                    [center, 384, 270, 0x1c819a],
+                    [center, 397, 270, 0x218da6],
+                    [center, 392, 260, 0xffffff],
+                    [center, 392, 248, 0x2797b0],
                 ]
             ],
             oper: [
-                [left, 1280, 720, 492, 150, 517, 173, 1000]
+                [left, 1280, 720, 378, 248, 405, 272, 1000]
             ]
         },
         {
             desc: [
                 1280, 720,
                 [
-                    [center, 376, 147, 0x01516c],
-                    [center, 386, 167, 0x279eb4],
-                    [right, 1172, 600, 0x7c654c],
-                    [center, 887, 592, 0x442e2d],
-                    [center, 853, 598, 0x9e9a7c],
-                    [right, 1146, 605, 0xa2a081],
+                    [right, 1174, 631, 0x81694e],
+                    [right, 1157, 631, 0x655141],
+                    [right, 1172, 630, 0x81694e],
+                    [right, 1180, 628, 0x826a4f],
                 ]
             ],
         },
@@ -70211,65 +72766,106 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [right, 1198, 522, 0x836127],
-                    [right, 1252, 36, 0xbb7636],
-                    [right, 1242, 645, 0x381e1c],
-                    [right, 1152, 605, 0xe6a040],
-                    [center, 873, 601, 0x7c654c],
-                    [center, 851, 601, 0x6e604d],
-                    [center, 356, 583, 0xe3d1c1],
-                    [right, 1146, 602, 0xe29737],
-                ]
-            ],
-            oper: [
-                [left, 1280, 720, 1143, 593, 1181, 614, 1000] // 关闭试用
-            ]
-        },
-        {
-            desc: [
-                1280, 720,
-                [
-                    [right, 1177, 600, 0x7c654c],
-                    [center, 882, 598, 0x7c654c],
-                    [right, 1121, 443, 0x067497],
-                    [right, 1110, 422, 0x07799b],
-                    [right, 1123, 237, 0x0881a2],
-                    [right, 1107, 218, 0x01597a],
+                    [right, 1154, 630, 0xe89737],
+                    [right, 1148, 628, 0xe59434],
+                    [right, 1145, 624, 0xde9537],
+                    [right, 1158, 628, 0xeba240],
+                    [right, 1154, 638, 0xea9f3d],
+                    [right, 1067, 35, 0x2b2320],
+                    [center, 390, 27, 0x6e5c40],
+                    [right, 1238, 565, 0x493e2d],
+                    [center, 571, 688, 0x453a2a],
                 ]
             ],
             oper: [
-                [left, 1280, 720, 1103, 421, 1128, 446, 1000] // 关闭试用主题
+                [left, 1280, 720, 1148, 620, 1178, 640, 1000] // 关闭试用
             ]
         },
         {
             desc: [
                 1280, 720,
                 [
-                    [right, 1171, 603, 0x7c654c],
-                    [center, 875, 603, 0x7c654c],
-                    [right, 1110, 220, 0x097d9d],
-                    [right, 1126, 230, 0x1084a5],
-                    [center, 877, 603, 0x7c654c],
-                    [right, 1203, 530, 0x856128],
-                ]
-            ]
-        },
-        {
-            desc: [
-                1280, 720,
-                [
-                    [left, 44, 28, 0xb0c6ef],
-                    [left, 208, 37, 0x714c3d],
-                    [left, 205, 688, 0x46382f],
-                    [left, 267, 691, 0x241610],
-                    [right, 1140, 687, 0x2d1f19],
-                    [right, 1250, 35, 0xb87637],
-                    [left, 40, 227, 0x472b26],
+                    [right, 1155, 622, 0xa7a583],
+                    [right, 1178, 627, 0x816a4e],
+                    [right, 1158, 627, 0x9a9474],
+                    [right, 1162, 630, 0xa5a17f],
+                    [right, 1175, 631, 0x816a4e],
+                    [right, 1128, 317, 0x0b7a98],
+                    [right, 1135, 325, 0xffffff],
+                    [right, 1130, 331, 0xf3f2f1],
+                    [right, 1121, 330, 0xfffffe],
+                    [right, 1127, 318, 0x0e82a0],
+                    [right, 1132, 341, 0x0b769a],
+                    [right, 1115, 334, 0x147a92],
                 ]
             ],
             oper: [
-                [left, 1280, 720, 124, 167, 192, 484, 1000] // 列表
+                [left, 1280, 720, 1117, 317, 1137, 338, 1000] // 关闭试用主题
             ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1182, 624, 0x836b51],
+                    [right, 1158, 624, 0xa7a383],
+                    [right, 1157, 641, 0x544130],
+                    [right, 1148, 635, 0x8c806b],
+                    [right, 1150, 621, 0x6d6444],
+                    [right, 1171, 622, 0x846b51],
+                    [right, 1184, 630, 0x846b51],
+                    [right, 1150, 631, 0xaca487],
+                    [right, 1184, 634, 0x846b51],
+                ]
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 44, 121, 0x1f1811],
+                    [left, 47, 538, 0x40362a],
+                    [right, 1270, 672, 0x504029],
+                    [left, 238, 40, 0x865837],
+                    [left, 30, 34, 0xfef7c2],
+                    [left, 57, 34, 0x9c6a3b],
+                    [left, 22, 55, 0x6d4d3a],
+                    [center, 702, 37, 0x31291b],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 151, 272, 209, 720, 1000] // 列表
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 908, 628, 0x5e3d1a],
+                    [center, 848, 627, 0x6a4935],
+                    [right, 1074, 608, 0xf4a946],
+                    [center, 691, 352, 0xffffff],
+                    [center, 700, 352, 0x1c8ea8],
+                    [center, 822, 627, 0xb37639],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 822, 620, 853, 637, 1000] // 关闭共享
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 821, 624, 0xa6a381],
+                    [center, 841, 621, 0x856c4f],
+                    [center, 850, 618, 0x836b4f],
+                    [center, 691, 340, 0x41b7c3],
+                    [right, 1181, 621, 0xffd07e],
+                    [right, 1068, 615, 0xe99b2c],
+                    [center, 901, 637, 0xdfa93f],
+                ]
+            ],
         },
     ],
     '升级结界体力食盒': [
@@ -70658,6 +73254,165 @@ var initialConfig = {
             ]
         },
     ],
+    '商店购买经验BUFF': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1208, 608, 0x6c402a],
+                    [right, 1190, 643, 0x61180f],
+                    [right, 1203, 653, 0x62180e],
+                    [right, 1182, 678, 0xd1ad7b],
+                    [right, 1168, 685, 0x74191f],
+                    [right, 1181, 691, 0xd25555],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 140, 8, 0xf8d7ab],
+                    [left, 156, 16, 0xf8d07a],
+                    [left, 142, 25, 0xd4ba46],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1185, 628, 1211, 668, 1000] // 打开菜单
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1223, 617, 0xa78054],
+                    [right, 1230, 645, 0xc6b7b6],
+                    [right, 1225, 680, 0xe1c188],
+                    [right, 1223, 701, 0x471512],
+                    [right, 1222, 601, 0x9a3e34],
+                    [left, 141, 8, 0xf8d7ab],
+                    [left, 128, 17, 0xb9a57a],
+                    [left, 156, 17, 0xf9d27f],
+                    [left, 140, 25, 0xd4ba46],
+                ]
+            ],
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 985, 643, 0x4d332b],
+                    [right, 1122, 636, 0x4c3229],
+                    [right, 1115, 641, 0x65472e],
+                    [right, 1082, 706, 0xe2ae68],
+                    [left, 30, 7, 0x2d2129],
+                    [left, 71, 5, 0x2b202b],
+                    [right, 1133, 31, 0xee4d38],
+                    [right, 1120, 35, 0xd7b497],
+                    [center, 882, 671, 0x3b78cd],
+                    [center, 881, 680, 0x3b78cd],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 877, 647, 922, 687, 1000] // 点击杂货铺
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1181, 128, 0xe99881],
+                    [right, 1241, 130, 0xd4808c],
+                    [right, 1238, 222, 0x80554f],
+                    [right, 1175, 217, 0x734d4c],
+                    [right, 1198, 197, 0x3b2625],
+                    [right, 1196, 243, 0x6e584f],
+                    [right, 1218, 238, 0x331f1f],
+                    [right, 1191, 113, 0xfadbb9],
+                    [right, 1225, 122, 0xfdddb4],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1188, 195, 1229, 246, 1000] // 点击特殊灯笼
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1173, 127, 0x694646],
+                    [right, 1236, 125, 0x856157],
+                    [right, 1201, 110, 0x4b3532],
+                    [right, 1201, 121, 0x56403b],
+                    [right, 1208, 152, 0x342020],
+                    [right, 1182, 216, 0xe9a38f],
+                    [right, 1221, 240, 0xd6ac8c],
+                    [right, 1208, 238, 0x8b5d51],
+                    [right, 1197, 242, 0xa77662],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 387, 366, 843, 416, 1000],
+                [left, 1280, 720, 383, 100, 845, 151, 1000], // 上
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 441, 157, 0x5f3e6f],
+                    [center, 731, 154, 0x523a64],
+                    [center, 637, 141, 0x4b3658],
+                    [center, 594, 247, 0x6816b3],
+                    [center, 680, 218, 0x430b08],
+                    [center, 688, 220, 0x4f1a15],
+                    [center, 704, 220, 0x430b08],
+                    [center, 450, 377, 0x7a4f44],
+                    [center, 448, 384, 0x9a7767],
+                    [center, 451, 391, 0x430b08],
+                    [center, 680, 217, 0x430b08],
+                    [center, 554, 204, 0x4e1813],
+                    [center, 611, 514, 0xdc4d41],
+                    [center, 620, 521, 0xf14a30],
+                    [center, 607, 520, 0x77634f],
+                    [center, 684, 520, 0x272420],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 554, 490, 719, 551, 1000],
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 62, 650, 0xe9e6e7],
+                    [left, 165, 678, 0x9c9090],
+                    [left, 240, 550, 0xb24a40],
+                    [left, 251, 545, 0x3f3d3c],
+                    [left, 121, 518, 0x6b4b4e],
+                    [left, 77, 535, 0xfff7f7],
+                    [left, 41, 477, 0xb9acaf],
+                    [left, 42, 461, 0x867778],
+                    [left, 218, 625, 0x716565],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1072, 407, 1144, 547, 1000],
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 45, 52, 0xf0f5fb],
+                    [left, 64, 48, 0x324797],
+                    [center, 832, 625, 0x94684c],
+                    [right, 1244, 625, 0x55362a],
+                    [right, 991, 647, 0x4e342b],
+                    [right, 1060, 634, 0x452d26],
+                    [center, 895, 662, 0x3b76cc],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 877, 647, 922, 687, 1000] // 点击杂货铺
+            ]
+        },
+    ],
     '领邮件': [
         {
             desc: [
@@ -70764,6 +73519,45 @@ var initialConfig = {
             ]
         },
     ],
+    '买60勾体力': [
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1082, 32, 0xf1d5b1],
+                    [center, 930, 24, 0xf0682a],
+                    [right, 1218, 614, 0xcfa876],
+                    [right, 1221, 647, 0xdac9c3],
+                    [right, 1222, 674, 0xe6d4cf],
+                    [center, 758, 31, 0xf14d32],
+                    [center, 558, 25, 0xe4cd7d],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1071, 21, 1091, 43, 1000] // 点击加号
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 365, 194, 0xcec3ba],
+                    [center, 832, 210, 0xd0c6bf],
+                    [center, 708, 462, 0xf3b25e],
+                    [center, 892, 472, 0xd0c7bf],
+                    [center, 395, 457, 0xc9c2ba],
+                    [center, 821, 342, 0xd6c9b9],
+                    [center, 904, 312, 0xd0c7bf],
+                    [center, 357, 410, 0xab888d],
+                    [center, 694, 487, 0xf3b25e],
+                    [center, 581, 461, 0xf3b25e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 554, 442, 721, 497, 1000] // 点击60勾
+            ]
+        },
+    ],
     '买体力': [
         {
             desc: [
@@ -70809,12 +73603,14 @@ var initialConfig = {
                     [right, 1122, 636, 0x4c3229],
                     [right, 1115, 641, 0x65472e],
                     [right, 1082, 706, 0xe2ae68],
-                    [left, 30, 7, 0x2d2129],
-                    [left, 71, 5, 0x2b202b],
-                    [right, 1133, 31, 0xee4d38],
-                    [right, 1120, 35, 0xd7b497],
                     [center, 882, 671, 0x3b78cd],
                     [center, 881, 680, 0x3b78cd],
+                    [center, 884, 674, 0x3d7fd3],
+                    [center, 912, 672, 0xe8cf71],
+                    [right, 1078, 702, 0xd9905c],
+                    [right, 1211, 698, 0xb47b4f],
+                    [left, 37, 54, 0xf1f4fc],
+                    [left, 65, 52, 0x233970],
                 ]
             ],
             oper: [
@@ -70860,6 +73656,46 @@ var initialConfig = {
             ],
             oper: [
                 [left, 1280, 720, 556, 496, 724, 549, 1000] // 购买
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 245, 507, 0x342f2f],
+                    [left, 85, 462, 0x887a7a],
+                    [left, 47, 454, 0x7c6d6d],
+                    [left, 32, 472, 0xbaaeb0],
+                    [left, 165, 454, 0xb6a8aa],
+                    [left, 161, 637, 0xa18e93],
+                    [left, 147, 615, 0xfdfdfd],
+                    [left, 135, 614, 0xe67e78],
+                    [left, 214, 627, 0x928285],
+                    [left, 214, 612, 0x6f2a2a],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 127, 582, 221, 657, 1000] // 点击空白
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 44, 30, 0xf7d79e],
+                    [center, 935, 677, 0x483629],
+                    [center, 931, 691, 0x59442b],
+                    [center, 861, 691, 0x57432b],
+                    [center, 875, 694, 0x2c2014],
+                    [center, 900, 697, 0xe6e5e4],
+                    [left, 45, 35, 0xf6e7a8],
+                    [left, 68, 34, 0x98683b],
+                    [left, 34, 20, 0x714d30],
+                    [center, 901, 577, 0xd5b676],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 27, 15, 74, 55, 1000] // 退出
             ]
         },
     ],
@@ -70923,37 +73759,30 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [left, 50, 36, 0xf5e6a7],
-                    [left, 251, 36, 0x583515],
-                    [left, 263, 37, 0x553414],
-                    [left, 195, 132, 0x9a6d65],
-                    [right, 1096, 142, 0xa86b34],
-                    [center, 813, 61, 0xf0d193],
-                    [center, 463, 78, 0xecb766],
-                    [center, 620, 80, 0xf8be61],
-                    [right, 1071, 582, 0x5f3735],
-                    [left, 188, 608, 0x5f3533],
+                    [left, 31, 37, 0xfaefb4],
+                    [left, 54, 37, 0xa66f3d],
+                    [left, 241, 31, 0x7c5936],
+                    [left, 257, 35, 0x573515],
+                    [right, 1111, 562, 0x905032],
+                    [right, 1150, 558, 0xb15e39],
+                    [left, 315, 558, 0xd5c8b2],
                 ]
             ],
-            oper: [
-                [left, 1280, 720, 473, 577, 559, 659, 1000] // 点击第一个式神位
-            ]
         },
         {
             desc: [
                 1280, 720,
                 [
-                    [right, 1075, 551, 0x5c3737],
-                    [left, 188, 607, 0x5f3533],
-                    [center, 455, 583, 0xcabca3],
-                    [center, 843, 665, 0xc99d67],
-                    [center, 752, 622, 0xc7a980],
-                    [center, 653, 598, 0x855b28],
-                    [center, 543, 590, 0x543712],
-                    [center, 496, 592, 0x97611f],
-                    [center, 490, 648, 0x513613],
-                    [center, 543, 643, 0x906432],
-                    [center, 663, 651, 0x654320],
+                    [center, 792, 537, 0xfdc72d],
+                    [center, 794, 540, 0xf0c73c],
+                    [center, 787, 540, 0xccb031],
+                    [center, 837, 545, 0xd3ae8a],
+                    [center, 845, 545, 0xd6b385],
+                    [center, 845, 540, 0xcaa67b],
+                    [center, 845, 534, 0xd2ae81],
+                    [center, 844, 598, 0xd437d5],
+                    [right, 1121, 557, 0xd2ba92],
+                    [left, 32, 35, 0xf9edb1],
                 ]
             ],
             oper: [
@@ -70964,15 +73793,16 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [center, 518, 591, 0xdad0db],
-                    [center, 505, 588, 0xaea5b2],
-                    [center, 521, 612, 0xc0a666],
-                    [center, 518, 621, 0xac9792],
-                    [center, 510, 621, 0xa9928d],
-                    [center, 505, 615, 0xb48c50],
-                    [center, 567, 662, 0x2d1c1a],
-                    [center, 567, 655, 0x48271c],
-                    [center, 567, 647, 0xd7c071],
+                    [center, 792, 537, 0xfdc72d],
+                    [center, 794, 540, 0xf0c73c],
+                    [center, 787, 540, 0xccb031],
+                    [center, 837, 545, 0xd3ae8a],
+                    [center, 845, 545, 0xd6b385],
+                    [center, 845, 540, 0xcaa67b],
+                    [center, 845, 534, 0xd2ae81],
+                    [center, 844, 598, 0xd437d5],
+                    [right, 1121, 557, 0xd2ba92],
+                    [left, 32, 35, 0xf9edb1],
                 ]
             ]
         },
@@ -71419,6 +74249,25 @@ var initialConfig = {
                 [center, 1280, 720, 527, 671, 740, 704, 1000],
             ]
         },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 37, 40, 0xf7eaac],
+                    [left, 60, 40, 0x885d34],
+                    [left, 231, 53, 0x5d3a3b],
+                    [left, 90, 41, 0x6f402e],
+                    [left, 28, 126, 0x351d1d],
+                    [right, 1252, 152, 0x2e1c1c],
+                    [right, 1250, 463, 0x2d1b1b],
+                    [center, 342, 648, 0x281818],
+                    [center, 622, 650, 0x2d1b1b],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 20, 20, 70, 63, 1000], // 返回
+            ]
+        },
     ],
     '式神升星': [
         {
@@ -71464,7 +74313,6 @@ var initialConfig = {
                     [center, 342, 78, 0x6e5751],
                     [center, 410, 81, 0x6b544f],
                     [center, 411, 102, 0x5b4a46],
-                    [left, 301, 101, 0xd2c3b3],
                     [center, 453, 88, 0xcec6a5],
                     [left, 77, 647, 0xe3d4c8],
                     [left, 212, 18, 0x35251c],
@@ -71504,7 +74352,6 @@ var initialConfig = {
                     [left, 46, 37, 0xf5e7a7],
                     [left, 66, 37, 0x6f4e2e],
                     [right, 1206, 523, 0xada298],
-                    [right, 1211, 601, 0xcc7c71],
                     [right, 1201, 601, 0xe1cac7],
                     [right, 1201, 612, 0xd7bab7],
                     [center, 921, 642, 0xf3b25e],
@@ -71544,7 +74391,6 @@ var initialConfig = {
                     [left, 46, 37, 0xf5e7a7],
                     [left, 66, 37, 0x6f4e2e],
                     [right, 1206, 523, 0xada298],
-                    [right, 1211, 601, 0xcc7c71],
                     [right, 1201, 601, 0xe1cac7],
                     [right, 1201, 612, 0xd7bab7],
                     [center, 921, 642, 0xf3b25e],
@@ -71843,6 +74689,27 @@ var initialConfig = {
                 ],
             ],
         },
+        {
+            //	6 检测是否为队伍公开权限弹窗（灰色）
+            desc: [
+                1280, 720,
+                [
+                    [center, 370, 145, 0x4e3428],
+                    [center, 905, 147, 0x422b21],
+                    [center, 908, 228, 0x988875],
+                    [center, 887, 574, 0x51372a],
+                    [center, 447, 574, 0x51372a],
+                    [center, 408, 572, 0x463024],
+                    [center, 801, 188, 0x988875],
+                    [center, 498, 194, 0x988875],
+                    [center, 670, 225, 0x7f6a58],
+                    [center, 361, 214, 0x998977],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 534, 491, 746, 537, 1000], //	队伍公开权限 点击创建
+            ],
+        },
     ],
     '金币妖怪_组队界面': [
         {
@@ -72093,6 +74960,24 @@ var initialConfig = {
             ],
             oper: [
                 [center, 1280, 720, 1036, 133, 1065, 158, 500]
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1201, 131, 0xe9d7d1],
+                    [right, 1114, 97, 0x3f2b20],
+                    [left, 305, 81, 0x3f3d44],
+                    [left, 128, 87, 0x39373e],
+                    [right, 1244, 277, 0x895020],
+                    [right, 1247, 387, 0x523523],
+                    [right, 1245, 438, 0x553623],
+                    [right, 1225, 622, 0xe9dab7],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 1210, 366, 1254, 453, 1500]
             ]
         }
     ],
@@ -72348,17 +75233,16 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [center, 870, 50, 0xa8371f],
-                    [center, 857, 50, 0xa5361e],
-                    [center, 858, 112, 0xa2351c],
-                    [right, 1076, 86, 0xa8371f],
-                    [left, 35, 46, 0xf0f5fb],
-                    [left, 238, 45, 0x593716],
-                    [center, 690, 10, 0x812a28],
+                    [left, 231, 127, 0x4f3428],
+                    [right, 972, 124, 0x37241c],
+                    [right, 1094, 170, 0x71333e],
+                    [right, 1097, 190, 0xe9d0ca],
+                    [left, 197, 547, 0x31211e],
+                    [right, 1108, 568, 0x433425],
                 ]
             ],
             oper: [
-                [left, 1280, 720, 23, 28, 64, 64, 1000] // 返回
+                [left, 1280, 720, 1078, 161, 1115, 202, 1000] // 关闭
             ]
         },
     ],
@@ -72818,13 +75702,11 @@ var initialConfig = {
                     [left, 187, 23, 0x785d3e],
                     [left, 203, 93, 0x5b4741],
                     [left, 207, 80, 0x624b43],
-                    [left, 35, 71, 0x9f895b],
-                    [left, 56, 660, 0xbc9f8e],
-                    [left, 81, 648, 0xe4d7cc],
                     [center, 345, 85, 0x69534e],
                     [center, 407, 91, 0x65504c],
                     [center, 336, 87, 0x665149],
-                    [center, 422, 98, 0x665349],
+                    [left, 224, 91, 0x5a4842],
+                    [left, 35, 120, 0x3e322d],
                 ]
             ],
             oper: [
@@ -72924,7 +75806,6 @@ var initialConfig = {
                     [left, 37, 28, 0xf5e6a6],
                     [left, 53, 28, 0xa26b3b],
                     [left, 298, 638, 0xcb23e9],
-                    [left, 290, 626, 0x7a38d1],
                 ]
             ]
         },
@@ -72939,13 +75820,11 @@ var initialConfig = {
                     [left, 187, 23, 0x785d3e],
                     [left, 203, 93, 0x5b4741],
                     [left, 207, 80, 0x624b43],
-                    [left, 35, 71, 0x9f895b],
-                    [left, 56, 660, 0xbc9f8e],
-                    [left, 81, 648, 0xe4d7cc],
                     [center, 345, 85, 0x69534e],
                     [center, 407, 91, 0x65504c],
                     [center, 336, 87, 0x665149],
-                    [center, 422, 98, 0x665349],
+                    [left, 224, 91, 0x5a4842],
+                    [left, 35, 120, 0x3e322d],
                 ]
             ],
         },
@@ -73054,13 +75933,11 @@ var initialConfig = {
                     [left, 187, 23, 0x785d3e],
                     [left, 203, 93, 0x5b4741],
                     [left, 207, 80, 0x624b43],
-                    [left, 35, 71, 0x9f895b],
-                    [left, 56, 660, 0xbc9f8e],
-                    [left, 81, 648, 0xe4d7cc],
                     [center, 345, 85, 0x69534e],
                     [center, 407, 91, 0x65504c],
                     [center, 336, 87, 0x665149],
-                    [center, 422, 98, 0x665349],
+                    [left, 224, 91, 0x5a4842],
+                    [left, 35, 120, 0x3e322d],
                 ]
             ],
             oper: [
@@ -73074,14 +75951,20 @@ var initialConfig = {
                     [right, 1225, 102, 0xf5c673],
                     [right, 1105, 100, 0xf8d89f],
                     [right, 1106, 136, 0xf8d599],
-                    [right, 1177, 135, 0xf8c777],
-                    [center, 741, 96, 0xffeda7],
-                    [center, 740, 110, 0xc89a4a],
                     [center, 856, 105, 0x5c3a19],
-                    [center, 723, 377, 0xcab387],
-                    [center, 725, 387, 0xc4ad8b],
-                    [center, 717, 382, 0xe9d3a6],
-                    [center, 733, 372, 0x554532],
+                    [center, 338, 95, 0x926f57],
+                    [center, 405, 95, 0x644d4a],
+                    [left, 291, 91, 0x644e48],
+                    [left, 305, 90, 0x67514b],
+                    [center, 440, 95, 0x624c48],
+                    [left, 252, 102, 0x54423f],
+                    [center, 332, 90, 0x5a473f],
+                    [center, 334, 90, 0xcda766],
+                    [center, 420, 91, 0xb79464],
+                    [right, 1221, 105, 0xf3c66e],
+                    [center, 718, 382, 0xceba8d],
+                    [center, 725, 382, 0xdbc899],
+                    [center, 722, 382, 0xe3c99c],
                 ]
             ],
             oper: [
@@ -73094,12 +75977,12 @@ var initialConfig = {
                 [
                     [left, 196, 96, 0x584440],
                     [center, 338, 90, 0x997b59],
-                    [center, 740, 100, 0xa89d70],
                     [right, 1105, 103, 0xf8d89f],
                     [right, 1236, 110, 0xf3c16d],
                     [right, 962, 152, 0xe3ba70],
                     [center, 905, 150, 0xe3ba70],
-                    [center, 885, 165, 0x967955],
+                    [center, 847, 158, 0xe4ba70],
+                    [center, 524, 142, 0xdeb460],
                 ]
             ],
             oper: [
@@ -73117,13 +76000,11 @@ var initialConfig = {
                     [left, 187, 23, 0x785d3e],
                     [left, 203, 93, 0x5b4741],
                     [left, 207, 80, 0x624b43],
-                    [left, 35, 71, 0x9f895b],
-                    [left, 56, 660, 0xbc9f8e],
-                    [left, 81, 648, 0xe4d7cc],
                     [center, 345, 85, 0x69534e],
                     [center, 407, 91, 0x65504c],
                     [center, 336, 87, 0x665149],
-                    [center, 422, 98, 0x665349],
+                    [left, 224, 91, 0x5a4842],
+                    [left, 35, 120, 0x3e322d],
                 ]
             ]
         },
@@ -73158,7 +76039,7 @@ var initialConfig = {
                     [center, 873, 100, 0x593616],
                     [center, 413, 95, 0x69534b],
                     [left, 280, 102, 0x5d4a47],
-                    [left, 302, 95, 0xc4b39b],
+                    [center, 340, 95, 0x806053],
                 ]
             ],
             oper: [
@@ -73222,6 +76103,44 @@ var initialConfig = {
                 [left, 1280, 720, 1178, 135, 1220, 176, 1000], // 关闭按钮
             ]
         },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 221, 48, 0x5a3816],
+                    [left, 42, 38, 0xf8ecaf],
+                    [left, 60, 37, 0xa46a36],
+                    [center, 811, 620, 0x492c24],
+                    [center, 938, 621, 0xe4ab1f],
+                    [center, 935, 678, 0xa5794a],
+                    [center, 812, 681, 0x40271e],
+                    [center, 681, 641, 0x553029],
+                    [right, 1084, 625, 0x522e26],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 28, 20, 69, 58, 1000], // 返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1188, 162, 0xce8289],
+                    [right, 1165, 155, 0x371f19],
+                    [center, 767, 90, 0x5a3818],
+                    [center, 742, 90, 0x5a3818],
+                    [right, 1125, 592, 0xefe7ad],
+                    [right, 1157, 595, 0x3a2919],
+                    [right, 1157, 628, 0x290c00],
+                    [center, 722, 84, 0x744a27],
+                    [center, 511, 568, 0x4f2e25],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1175, 130, 1220, 177, 1000], // 关闭
+            ]
+        },
     ],
     '式神升级': [
         {
@@ -73233,13 +76152,11 @@ var initialConfig = {
                     [left, 187, 23, 0x785d3e],
                     [left, 203, 93, 0x5b4741],
                     [left, 207, 80, 0x624b43],
-                    [left, 35, 71, 0x9f895b],
-                    [left, 56, 660, 0xbc9f8e],
-                    [left, 81, 648, 0xe4d7cc],
                     [center, 345, 85, 0x69534e],
                     [center, 407, 91, 0x65504c],
                     [center, 336, 87, 0x665149],
-                    [center, 422, 98, 0x665349],
+                    [left, 224, 91, 0x5a4842],
+                    [left, 35, 120, 0x3e322d],
                 ]
             ],
             oper: [
@@ -73358,13 +76275,11 @@ var initialConfig = {
                     [left, 187, 23, 0x785d3e],
                     [left, 203, 93, 0x5b4741],
                     [left, 207, 80, 0x624b43],
-                    [left, 35, 71, 0x9f895b],
-                    [left, 56, 660, 0xbc9f8e],
-                    [left, 81, 648, 0xe4d7cc],
                     [center, 345, 85, 0x69534e],
                     [center, 407, 91, 0x65504c],
                     [center, 336, 87, 0x665149],
-                    [center, 422, 98, 0x665349],
+                    [left, 224, 91, 0x5a4842],
+                    [left, 35, 120, 0x3e322d],
                 ]
             ]
         },
@@ -73496,13 +76411,14 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [left, 128, 17, 0xb9a57a],
-                    [left, 141, 8, 0xf8d7ab],
-                    [left, 146, 25, 0xd4ba46],
-                    [left, 157, 16, 0xf6c154],
-                    [right, 1272, 138, 0xf7f7eb],
-                    [right, 1272, 118, 0xece2cf],
-                    [right, 1271, 107, 0xefe7d9],
+                    [right, 1270, 145, 0xf7f7eb],
+                    [right, 1254, 145, 0xf7f7eb],
+                    [right, 1264, 145, 0xf7f7eb],
+                    [right, 1258, 152, 0xf7f7eb],
+                    [right, 1271, 152, 0xf7f7eb],
+                    [right, 1262, 152, 0xf7f7eb],
+                    [right, 1221, 651, 0xdac9c3],
+                    [right, 1221, 617, 0xf5e6a7],
                 ]
             ]
         },
@@ -74079,6 +76995,43 @@ var initialConfig = {
                 ]
             ]
         },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1092, 124, 0x90432f],
+                    [center, 747, 78, 0xffefcf],
+                    [center, 534, 70, 0xffefc7],
+                    [center, 544, 47, 0xfbd794],
+                    [left, 177, 114, 0x873e2e],
+                    [right, 1040, 680, 0x7c3a2c],
+                    [right, 1090, 291, 0xb06f5b],
+                    [center, 817, 91, 0xa15338],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1075, 58, 1107, 88, 1000] // 点击关闭
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 30, 45, 0xf0f5fb],
+                    [center, 905, 74, 0x4a2927],
+                    [right, 1165, 74, 0x4a2826],
+                    [right, 1160, 138, 0x503a37],
+                    [center, 327, 77, 0x453735],
+                    [right, 1210, 671, 0x4a3528],
+                    [right, 1087, 667, 0x3c2a26],
+                    [left, 28, 38, 0xeff4fa],
+                    [left, 234, 47, 0x5f3e18],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 20, 21, 64, 62, 1000] // 点击返回
+            ]
+        },
     ],
     '犬神剧情': [
         {
@@ -74532,16 +77485,18 @@ var initialConfig = {
             desc: [
                 1280, 720,
                 [
-                    [center, 436, 646, 0xf3b25e],
-                    [center, 778, 575, 0xafb5b9],
-                    [center, 771, 578, 0x9da4aa],
-                    [center, 770, 590, 0xdedfdf],
-                    [right, 1105, 686, 0x201821],
-                    [left, 227, 647, 0x35242f],
+                    [center, 844, 628, 0xab7d42],
+                    [center, 705, 631, 0xab7d42],
+                    [center, 700, 657, 0xab7d42],
+                    [center, 842, 657, 0xab7d42],
+                    [center, 424, 621, 0x9a3c30],
+                    [center, 450, 641, 0xf3b25e],
+                    [center, 562, 648, 0xf3b25e],
+                    [center, 702, 641, 0xab7d42],
                 ]
             ],
             oper: [
-                [left, 1280, 720, 423, 620, 588, 671, 1000], // 点击确定
+                [left, 1280, 720, 422, 618, 583, 673, 1000], // 点击确定
             ]
         },
         {
@@ -74667,6 +77622,65 @@ var initialConfig = {
             ],
             oper: [
                 [center, 1280, 720, 902, 183, 955, 254, 1000], // 点击召唤灯笼
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1192, 120, 0x201e4a],
+                    [right, 1234, 112, 0x1c1a41],
+                    [right, 1235, 94, 0x161328],
+                    [right, 1147, 51, 0x140c2b],
+                    [right, 1192, 44, 0x4b3552],
+                    [right, 1114, 448, 0x1a1438],
+                    [right, 1265, 431, 0x1c1636],
+                    [right, 1274, 460, 0x191337],
+                    [right, 1222, 647, 0x0d1851],
+                    [right, 1188, 628, 0x0d1a52],
+                    [right, 1134, 657, 0x0a144b],
+                    [right, 1244, 662, 0x0b154c],
+                    [right, 1120, 372, 0x1c153a],
+                    [right, 1187, 41, 0x513a57],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 1075, 174, 1126, 256, 1000], // 点击召唤灯笼
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 735, 340, 0xff0000],
+                    [center, 894, 332, 0xff0000],
+                    [center, 900, 404, 0xf9f2e0],
+                    [right, 1152, 412, 0xff0000],
+                    [right, 1184, 408, 0xf90303],
+                    [center, 734, 401, 0xeeedd6],
+                    [right, 984, 540, 0xffffff],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 994, 640, 1046, 694, 1000], // 点击基础术式
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 715, 111, 0x372215],
+                    [center, 730, 110, 0x362114],
+                    [center, 732, 104, 0x847250],
+                    [center, 711, 111, 0x27170d],
+                    [center, 708, 110, 0xc6a87d],
+                    [center, 724, 111, 0x959685],
+                    [center, 722, 104, 0xf1dfd1],
+                    [right, 1265, 617, 0x755024],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 768, 174, 800, 211, 1000], // 点击犬神
             ]
         }
     ],
@@ -74972,7 +77986,24 @@ var initialConfig = {
                 [center, 1280, 720, 0, 272, 36, 414, 1000],
                 [center, 1280, 720, 475, 121, 531, 187, 1000], // 点击灯笼
             ]
-        }
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1177, 614, 0x3e2e1f],
+                    [right, 1152, 638, 0x3a2d1f],
+                    [right, 1138, 612, 0xc9b37f],
+                    [right, 1182, 648, 0xebcb6e],
+                    [right, 1145, 642, 0x31261b],
+                    [left, 298, 55, 0xf5e59d],
+                    [left, 302, 211, 0xe6c45a],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 1202, 38, 1236, 68, 1000], // 关闭
+            ]
+        },
     ],
     '庭院进入探索地图': [
         {
@@ -75184,6 +78215,22 @@ var initialConfig = {
             desc: '准备界面_未准备',
             oper: [
                 [left, 1280, 720, 119, 659, 150, 712, 1000],
+            ]
+        }, {
+            desc: [
+                1280, 720,
+                [
+                    [center, 895, 530, 0xf3b25e],
+                    [right, 988, 524, 0xf3b25e],
+                    [right, 1044, 147, 0xe8d1d1],
+                    [right, 1067, 147, 0x662a47],
+                    [right, 1024, 147, 0x6e3134],
+                    [left, 250, 167, 0xd3bf9f],
+                    [center, 460, 570, 0xc7b095],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 1027, 130, 1067, 171, 1000],
             ]
         }
     ],
@@ -75661,6 +78708,24 @@ var initialConfig = {
                 [left, 1280, 720, 37, 637, 86, 686, 1000]
             ]
         },
+        {
+            // 10 手动状态
+            desc: [
+                1280, 720,
+                [
+                    [right, 965, 708, 0xbbf1fc],
+                    [right, 1265, 614, 0x79532a],
+                    [right, 1260, 80, 0x3f2c19],
+                    [right, 961, 702, 0x0b168b],
+                    [center, 941, 697, 0x3f2d22],
+                    [right, 1257, 80, 0x302214],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 111, 600, 142, 635, 1500],
+                [left, 1280, 720, 37, 637, 86, 686, 1500]
+            ]
+        },
     ],
     '打最后一章探索副本': [
         {
@@ -75696,10 +78761,8 @@ var initialConfig = {
                 [
                     [right, 1045, 182, 0x47322c],
                     [right, 1122, 182, 0x553b1f],
-                    [right, 1182, 182, 0x3e2b15],
                     [right, 1265, 184, 0x46312a],
                     [right, 1137, 214, 0xd9d4c2],
-                    [right, 1161, 212, 0x4d4439],
                     [right, 1267, 368, 0x47352d],
                     [right, 1267, 491, 0x47352d],
                     [right, 1052, 202, 0x644316],
@@ -75966,6 +79029,46 @@ var initialConfig = {
             ],
             oper: [
                 [left, 1280, 720, 1111, 676, 1273, 718, 1200], //  点击右下角
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1195, 630, 0xe4d9c3],
+                    [right, 1114, 630, 0xe6dcc5],
+                    [right, 1032, 630, 0xd9d0bb],
+                    [center, 935, 628, 0xa88867],
+                    [left, 265, 41, 0x593716],
+                    [left, 251, 41, 0x593716],
+                    [left, 72, 47, 0x424d91],
+                    [left, 47, 41, 0xc4cce1],
+                    [right, 1188, 618, 0xe2d6c0],
+                    [right, 980, 602, 0xe5d9c3],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 40, 24, 81, 66, 1200], // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 42, 45, 0xc3cbe1],
+                    [left, 70, 40, 0x496f94],
+                    [center, 424, 61, 0xfbe0c7],
+                    [center, 447, 61, 0xf0e5cf],
+                    [center, 948, 644, 0xdacfb7],
+                    [right, 1020, 625, 0xe4d8c2],
+                    [right, 982, 607, 0xe5d9c2],
+                    [right, 1151, 598, 0xe3d9c2],
+                    [right, 1157, 672, 0xe4dac4],
+                    [center, 840, 655, 0xeedebe],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 40, 24, 81, 66, 1200], // 点击返回
             ]
         }
     ],
@@ -77492,6 +80595,168 @@ var initialConfig = {
                 [left, 1280, 720, 25, 6, 72, 53, 1000] // 点击关闭
             ]
         },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 804, 31, 0x2d251b],
+                    [center, 731, 37, 0x6a5c40],
+                    [center, 625, 41, 0x231e13],
+                    [center, 531, 41, 0x3e3323],
+                    [left, 262, 37, 0x563517],
+                    [left, 244, 34, 0x583716],
+                    [left, 60, 34, 0x93643b],
+                    [left, 37, 34, 0xf5e2a3],
+                    [left, 20, 35, 0x855e3a],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 17, 17, 64, 59, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1255, 690, 0x6c264c],
+                    [right, 1271, 594, 0x64254a],
+                    [right, 1268, 491, 0x521f43],
+                    [left, 162, 702, 0x8d2c55],
+                    [left, 57, 40, 0x35527f],
+                    [left, 30, 41, 0xeff5fb],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 21, 22, 71, 72, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1095, 604, 0xec5a29],
+                    [left, 58, 654, 0xefefe8],
+                    [left, 45, 70, 0xf0f5fb],
+                    [left, 60, 62, 0x313c7f],
+                    [right, 1041, 30, 0xd7c3a2],
+                    [center, 882, 20, 0xfe7d2d],
+                    [left, 67, 62, 0x314a7c],
+                    [left, 38, 61, 0xf0f5fb],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 31, 37, 78, 85, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 852, 390, 0x983d2e],
+                    [center, 580, 415, 0x9a402e],
+                    [center, 730, 332, 0x3f3932],
+                    [center, 731, 317, 0x514940],
+                    [center, 734, 321, 0x554c43],
+                    [center, 938, 284, 0x4e361a],
+                    [center, 341, 345, 0x4f3618],
+                    [center, 561, 397, 0xf3b25e],
+                    [center, 720, 398, 0xf3b25e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 697, 381, 848, 422, 1000] // 点击确认
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 42, 32, 0xe2b976],
+                    [center, 372, 48, 0x7a613f],
+                    [center, 938, 70, 0x672f28],
+                    [right, 1125, 120, 0x855d3d],
+                    [left, 161, 114, 0x35393e],
+                    [left, 45, 50, 0xb17843],
+                    [right, 1134, 471, 0x793c32],
+                    [left, 155, 494, 0x753930],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 30, 21, 71, 58, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [left, 41, 40, 0xf7e9ab],
+                    [left, 61, 32, 0x815630],
+                    [right, 1220, 138, 0x3a251f],
+                    [center, 624, 91, 0x452f28],
+                    [left, 50, 44, 0xf0dd9b],
+                    [left, 62, 34, 0x714c2b],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 27, 22, 67, 59, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1107, 30, 0x523727],
+                    [right, 1044, 4, 0x5b3d43],
+                    [right, 1227, 488, 0xc09a63],
+                    [right, 1204, 570, 0xb25647],
+                    [right, 1001, 688, 0x4e281f],
+                    [center, 847, 684, 0x49241c],
+                    [center, 928, 565, 0xdd7300],
+                    [center, 350, 684, 0x44221b],
+                    [left, 50, 31, 0xf4de9b],
+                    [left, 47, 40, 0xf3e2a1],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 28, 18, 75, 58, 1000] // 点击返回
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1185, 110, 0xf4dfd4],
+                    [right, 1164, 94, 0x622629],
+                    [right, 1175, 112, 0xe7d5cf],
+                    [center, 852, 52, 0x3c3b41],
+                    [center, 598, 21, 0x48464d],
+                    [center, 524, 67, 0x4e3826],
+                    [center, 375, 60, 0x4d2f25],
+                    [right, 1072, 675, 0x211a18],
+                    [left, 111, 65, 0x4d351e],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 1154, 94, 1192, 136, 1000] // 点击关闭
+            ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [center, 404, 15, 0x130c07],
+                    [center, 530, 20, 0x0d0907],
+                    [center, 692, 18, 0x0a0a0a],
+                    [right, 1234, 667, 0x978e65],
+                    [right, 1240, 677, 0x9d8c6b],
+                    [left, 32, 32, 0xbdb68b],
+                    [left, 50, 32, 0x925f32],
+                ]
+            ],
+            oper: [
+                [left, 1280, 720, 20, 21, 64, 62, 1000] // 点击返回
+            ]
+        },
     ],
     '启动游戏': [
         {
@@ -78144,28 +81409,28 @@ var initialConfig = {
             // 40 全平台
             oper: [
                 [right, 1280, 720, 767, 320, 858, 350, 1000],
-                [right, 1280, 720, 767, 397, 851, 424, 1000], // 下
+                [right, 1280, 720, 767, 380, 851, 410, 1000], // 下
             ]
         },
         {
             // 41 中国区-安卓
             oper: [
                 [right, 1280, 720, 599, 295, 683, 323, 1000],
-                [right, 1280, 720, 607, 390, 682, 414, 1000], // 下
+                [right, 1280, 720, 607, 370, 682, 395, 1000], // 下
             ]
         },
         {
             // 42 网易-双平台
             oper: [
                 [right, 1280, 720, 426, 298, 509, 322, 1000],
-                [right, 1280, 720, 425, 389, 513, 415, 1000], // 下
+                [right, 1280, 720, 425, 370, 513, 395, 1000], // 下
             ]
         },
         {
             // 43 中国区-ios
             oper: [
                 [right, 1280, 720, 254, 296, 341, 322, 1000],
-                [right, 1280, 720, 257, 366, 332, 388, 1000], // 下
+                [right, 1280, 720, 257, 360, 332, 380, 1000], // 下
             ]
         },
         {
@@ -78271,6 +81536,55 @@ var initialConfig = {
             ],
             oper: [
                 [right, 1280, 720, 1190, 34, 1232, 75, 1000], // 点击确定
+            ]
+        },
+        {
+            // 49 登录失败点击重新登录
+            desc: [
+                1280, 720,
+                [
+                    [center, 424, 241, 0xf8f9fd],
+                    [center, 845, 261, 0xf9fafd],
+                    [center, 770, 331, 0xf9fafd],
+                    [center, 515, 315, 0xf8f9fc],
+                    [center, 547, 412, 0xfb4f4f],
+                    [center, 730, 418, 0xfb4f4f],
+                    [center, 730, 448, 0xfb4f4f],
+                    [center, 544, 458, 0xfb4f4f],
+                    [center, 690, 447, 0xfebdbd],
+                    [center, 587, 447, 0xffffff],
+                    [center, 590, 425, 0xfed3d3],
+                ]
+            ],
+            oper: [
+                [right, 1280, 720, 532, 408, 737, 460, 1000], // 点击重新登录
+            ]
+        },
+    ],
+    '已断开连接': [
+        {
+            // 0 断开连接检测
+            desc: [
+                1280, 720,
+                [
+                    [center, 461, 260, 0x53362a],
+                    [center, 817, 255, 0x5d3e2f],
+                    [center, 797, 458, 0x4f3526],
+                    [center, 475, 458, 0x4f3526],
+                    [center, 445, 317, 0x595045],
+                    [center, 454, 321, 0x524a41],
+                    [center, 444, 328, 0x716558],
+                    [center, 452, 334, 0x282521],
+                    [center, 832, 315, 0x484239],
+                    [center, 832, 320, 0x75695b],
+                    [center, 832, 325, 0x60574b],
+                    [center, 840, 328, 0x474038],
+                    [center, 685, 387, 0xf3b25e],
+                    [center, 581, 395, 0xde9f59],
+                ]
+            ],
+            oper: [
+                [right, 1280, 720, 580, 378, 704, 428, 1000], // 点击确定
             ]
         },
     ]
@@ -80894,6 +84208,23 @@ var multiFindColors = {
                     [center, 812, 281, 0x14964e],
                     [center, 810, 289, 0x2db560],
                     [center, 816, 288, 0x41d57a],
+                ]
+            ],
+            [
+                1280, 720,
+                [
+                    [left, 214, 333, 0x134a26],
+                    [left, 218, 333, 0x144b27],
+                    [left, 224, 333, 0x215434],
+                ]
+            ],
+            [
+                1280, 720,
+                [
+                    [left, 198, 300, 0x125c40],
+                    [left, 201, 293, 0x003623],
+                    [left, 201, 294, 0x003623],
+                    [left, 205, 297, 0x003824],
                 ]
             ],
             [1280, 720,
@@ -85297,7 +88628,7 @@ var multiFindColors = {
     },
     '平安京密卷图标': {
         region: [right, 1280, 720, 1166, 97, 1259, 459],
-        similar: 98,
+        similar: 93,
         desc: [
             [
                 1280, 720,
@@ -85312,6 +88643,20 @@ var multiFindColors = {
                     [right, 1211, 203, 0xee8e80],
                     [right, 1185, 195, 0x6c2d29],
                     [right, 1231, 195, 0x975442],
+                ]
+            ],
+            [
+                1280, 720,
+                [
+                    [right, 1184, 168, 0x663b37],
+                    [right, 1198, 168, 0x623637],
+                    [right, 1204, 170, 0x6d3835],
+                    [right, 1224, 170, 0x643d37],
+                    [right, 1205, 191, 0xe18f7b],
+                    [right, 1188, 188, 0xb65748],
+                    [right, 1215, 190, 0x8a2f31],
+                    [right, 1195, 205, 0xf4afa9],
+                    [right, 1198, 165, 0x603b34],
                 ]
             ]
         ]
@@ -85695,6 +89040,77 @@ var multiFindColors = {
                     [left, 112, 260, 0x8eeff7],
                     [left, 136, 260, 0x8eeff7],
                     [left, 156, 270, 0x825624],
+                ]
+            ]
+        ]
+    },
+    '预存_姑获鸟': {
+        region: [right, 1280, 720, 140, 472, 1097, 703],
+        similar: 90,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [left, 212, 501, 0xc88322],
+                    [left, 235, 507, 0xdb9825],
+                    [left, 200, 527, 0xf5ebdb],
+                    [left, 217, 527, 0xf9ede0],
+                    [left, 194, 551, 0xd9cdbd],
+                    [left, 220, 545, 0xa7949e],
+                    [left, 245, 585, 0x22d8ed],
+                    [left, 225, 584, 0x2b5b6b],
+                    [left, 205, 607, 0xde9b38],
+                    [left, 245, 605, 0xe9aa3e],
+                    [left, 255, 621, 0xbb671e],
+                    [left, 192, 628, 0x2b2526],
+                ]
+            ]
+        ]
+    },
+    '预存_雪女': {
+        region: [right, 1280, 720, 140, 472, 1097, 703],
+        similar: 90,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [center, 342, 515, 0xfbfefe],
+                    [center, 324, 511, 0x84dff9],
+                    [center, 341, 512, 0xfbffff],
+                    [center, 345, 530, 0x8deded],
+                    [center, 360, 531, 0x43a3cc],
+                    [center, 351, 538, 0x2eb9d0],
+                    [center, 351, 547, 0xcceef6],
+                    [center, 361, 551, 0xcce1ed],
+                    [left, 320, 571, 0x5193b6],
+                    [center, 325, 611, 0xd22798],
+                    [center, 371, 611, 0xb82f6f],
+                    [center, 374, 582, 0x7daed7],
+                ]
+            ]
+        ]
+    },
+    '预存_座敷': {
+        region: [right, 1280, 720, 140, 472, 1097, 703],
+        similar: 90,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [center, 601, 518, 0xc89a92],
+                    [center, 581, 532, 0x4c454f],
+                    [center, 580, 532, 0x378189],
+                    [center, 607, 535, 0xefdad2],
+                    [center, 605, 555, 0xe9e3e0],
+                    [center, 618, 550, 0x634c54],
+                    [center, 630, 550, 0x261b1f],
+                    [center, 574, 612, 0x3a3046],
+                    [center, 601, 600, 0x69465c],
+                    [center, 615, 594, 0x64445a],
+                    [center, 622, 620, 0x24cbe1],
+                    [center, 605, 621, 0xa67f75],
+                    [center, 572, 625, 0x564457],
+                    [center, 571, 631, 0x93703f],
                 ]
             ]
         ]
@@ -86246,21 +89662,17 @@ var multiFindColors = {
             [
                 1280, 720,
                 [
-                    [center, 408, 305, 0xa9928e],
-                    [center, 393, 343, 0x907875],
-                    [center, 393, 357, 0x836e69],
-                    [center, 407, 343, 0x3d363a],
-                    [center, 406, 352, 0x846e69],
-                    [center, 425, 273, 0xefeaef],
-                    [center, 403, 273, 0xaea4b1],
-                    [center, 402, 297, 0xd3a873],
-                    [center, 368, 427, 0x54372c],
-                    [center, 367, 437, 0x4d3025],
-                    [center, 458, 435, 0x523529],
-                    [center, 458, 420, 0xd1c0a9],
-                    [center, 420, 421, 0xd1c0a9],
-                    [center, 405, 423, 0xd0bfa8],
-                    [center, 386, 422, 0xd1c0a9],
+                    [center, 497, 261, 0xbaafbd],
+                    [center, 515, 258, 0xc8bec9],
+                    [center, 507, 292, 0xa8918c],
+                    [center, 512, 294, 0xae9893],
+                    [center, 488, 330, 0x907874],
+                    [center, 485, 340, 0x87726d],
+                    [center, 484, 348, 0x796660],
+                    [center, 502, 345, 0x8b7570],
+                    [center, 521, 262, 0xe6dfe6],
+                    [center, 508, 252, 0x2c2129],
+                    [center, 515, 284, 0xddbf76],
                 ]
             ]
         ]
@@ -86303,7 +89715,6 @@ var multiFindColors = {
                     [left, 257, 155, 0x282323],
                     [left, 256, 147, 0x534949],
                     [left, 285, 146, 0x5b5757],
-                    [left, 297, 180, 0xceb685],
                 ]
             ]
         ]
@@ -86330,6 +89741,43 @@ var multiFindColors = {
                     [center, 847, 451, 0xbf8f50],
                     [center, 956, 421, 0xceccb7],
                     [center, 868, 407, 0x19110c],
+                ]
+            ]
+        ]
+    },
+    '经验BUFF图标': {
+        region: [right, 1280, 720, 130, 73, 1057, 629],
+        similar: 90,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [center, 670, 365, 0xd9eef7],
+                    [center, 718, 352, 0x1c62a1],
+                    [center, 661, 397, 0x3070bb],
+                    [center, 700, 394, 0x9cbae7],
+                    [center, 714, 415, 0xf6e71f],
+                    [center, 685, 430, 0x9fb9e1],
+                    [center, 722, 461, 0xc4c2ae],
+                    [center, 722, 450, 0xdad8c2],
+                    [center, 720, 451, 0xd6d4be],
+                    [center, 730, 455, 0xdad8c2],
+                    [center, 708, 485, 0x2a0f09],
+                    [center, 708, 495, 0x2b100a],
+                    [center, 708, 491, 0x2b100a],
+                    [center, 708, 488, 0x2b100a],
+                    [center, 708, 498, 0x2a0f09],
+                    [center, 718, 485, 0x2a0f09],
+                    [center, 718, 494, 0xce9850],
+                    [center, 720, 497, 0xc9934d],
+                    [center, 720, 501, 0x6d4626],
+                    [center, 714, 492, 0x3a1c10],
+                    [center, 704, 500, 0xd09a51],
+                    [center, 712, 500, 0xce9850],
+                    [center, 711, 490, 0xd49c52],
+                    [center, 650, 350, 0x77716e],
+                    [center, 722, 345, 0xbdd7ef],
+                    [center, 648, 407, 0xc4def5],
                 ]
             ]
         ]
@@ -86391,7 +89839,147 @@ var multiFindColors = {
                 ]
             ]
         ]
-    }
+    },
+    '紫色蛇皮': {
+        region: [center, 1280, 720, 7, 77, 653, 435],
+        similar: 88,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [left, 157, 239, 0x7c6781],
+                    [left, 150, 240, 0x5d4e5d],
+                    [left, 145, 256, 0x6b4688],
+                    [left, 134, 266, 0x694c6a],
+                    [left, 128, 232, 0x634576],
+                    [left, 126, 210, 0x5f4175],
+                    [left, 154, 244, 0x272222],
+                    [left, 145, 262, 0x6b487d],
+                ]
+            ]
+        ]
+    },
+    '地域鬼王图标': {
+        region: [center, 1280, 720, 47, 610, 1082, 717],
+        similar: 93,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [center, 655, 654, 0xa83742],
+                    [center, 671, 647, 0xb53444],
+                    [center, 667, 661, 0x9e333c],
+                    [center, 671, 655, 0xec9d4e],
+                    [center, 675, 655, 0x1f160c],
+                    [center, 687, 654, 0x7a532e],
+                    [center, 682, 665, 0xf1816d],
+                    [center, 675, 671, 0xc75050],
+                    [center, 674, 675, 0xf2bf61],
+                ]
+            ]
+        ]
+    },
+    '秘闻副本图标': {
+        region: [center, 1280, 720, 47, 610, 1082, 717],
+        similar: 93,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [center, 560, 634, 0xea9795],
+                    [center, 557, 651, 0xfaf9f0],
+                    [center, 552, 652, 0xedefef],
+                    [center, 550, 674, 0x6981a6],
+                    [center, 564, 667, 0xeddccf],
+                    [center, 584, 664, 0xd6cfc4],
+                    [center, 584, 650, 0x909090],
+                    [center, 572, 648, 0x524944],
+                    [center, 557, 645, 0xdc8885],
+                    [center, 562, 645, 0x242423],
+                    [center, 587, 651, 0x333230],
+                    [center, 585, 651, 0x050505],
+                ]
+            ]
+        ]
+    },
+    '好友对钩_1': {
+        region: [center, 1280, 720, 945, 230, 1127, 322],
+        similar: 93,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [right, 1097, 280, 0x43894c],
+                    [right, 1090, 278, 0x56b260],
+                    [right, 1084, 277, 0x67bb74],
+                    [right, 1080, 288, 0x50ad5a],
+                    [right, 1068, 280, 0x5bb765],
+                    [right, 1080, 277, 0x3c2b29],
+                    [right, 1078, 272, 0x3f2d2b],
+                    [right, 1070, 292, 0x221f18],
+                    [right, 1091, 297, 0x3f2d2b],
+                ]
+            ]
+        ]
+    },
+    '好友对钩_2': {
+        region: [center, 1280, 720, 947, 321, 1135, 415],
+        similar: 93,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [right, 1097, 280, 0x43894c],
+                    [right, 1090, 278, 0x56b260],
+                    [right, 1084, 277, 0x67bb74],
+                    [right, 1080, 288, 0x50ad5a],
+                    [right, 1068, 280, 0x5bb765],
+                    [right, 1080, 277, 0x3c2b29],
+                    [right, 1078, 272, 0x3f2d2b],
+                    [right, 1070, 292, 0x221f18],
+                    [right, 1091, 297, 0x3f2d2b],
+                ]
+            ]
+        ]
+    },
+    '好友对钩_3': {
+        region: [center, 1280, 720, 944, 411, 1128, 509],
+        similar: 93,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [right, 1097, 280, 0x43894c],
+                    [right, 1090, 278, 0x56b260],
+                    [right, 1084, 277, 0x67bb74],
+                    [right, 1080, 288, 0x50ad5a],
+                    [right, 1068, 280, 0x5bb765],
+                    [right, 1080, 277, 0x3c2b29],
+                    [right, 1078, 272, 0x3f2d2b],
+                    [right, 1070, 292, 0x221f18],
+                    [right, 1091, 297, 0x3f2d2b],
+                ]
+            ]
+        ]
+    },
+    '同心队提醒': {
+        region: [center, 1280, 720, 41, 94, 441, 216],
+        similar: 93,
+        desc: [
+            [
+                1280, 720,
+                [
+                    [left, 118, 132, 0xeccb97],
+                    [left, 118, 145, 0xfdead1],
+                    [left, 115, 162, 0xb96335],
+                    [left, 152, 158, 0xfdf0dc],
+                    [left, 137, 170, 0x68351a],
+                    [left, 127, 174, 0x754732],
+                    [left, 134, 121, 0x912020],
+                ]
+            ]
+        ]
+    },
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (multiFindColors);
 
@@ -101134,11 +104722,15 @@ function digui_hot() {
     var taskName = '地鬼日常';
     var thisOperator = thisScript.formatOperate(_taskConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
     if (thisScript.oper({
-        id: 16,
-        name: '探索界面',
-        operator: [thisOperator[3]]
+        name: '判断探索地图界面',
+        operator: [{ desc: thisOperator[3].desc }]
     })) {
-        return true;
+        var digui_icon = thisScript.findMultiColor('地域鬼王图标');
+        if (digui_icon) {
+            thisScript.regionClick([[digui_icon.x + 10, digui_icon.y + 10, digui_icon.x + 20, digui_icon.y + 20, 1000]]);
+            console.log('点击地域鬼王图标');
+            return false;
+        }
     }
     if (thisScript.oper({
         id: 16,
@@ -104318,8 +107910,19 @@ function explore_to_miwen() {
     var taskName = '探索地图进入每周挑战秘闻';
     var thisOperator = thisScript.formatOperate(_taskConfig__WEBPACK_IMPORTED_MODULE_0__["default"][taskName], taskName);
     if (thisScript.oper({
+        name: '判断探索地图界面',
+        operator: [{ desc: thisOperator[1].desc }]
+    })) {
+        var miwen_icon = thisScript.findMultiColor('秘闻副本图标');
+        if (miwen_icon) {
+            thisScript.regionClick([[miwen_icon.x + 10, miwen_icon.y + 10, miwen_icon.x + 20, miwen_icon.y + 20, 1000]]);
+            console.log('点击秘闻副本图标');
+            return false;
+        }
+    }
+    if (thisScript.oper({
         name: '探索地图进入每周挑战秘闻',
-        operator: thisOperator
+        operator: [thisOperator[0], thisOperator[2], thisOperator[3], thisOperator[4]]
     })) {
         return true;
     }
@@ -105743,19 +109346,27 @@ function map_to_tupo() {
     else {
         thisconfig = exit_conf;
     }
+    if (thisScript.oper({
+        name: '判断探索地图界面',
+        operator: [{ desc: thisOperator[0].desc }]
+    })) {
+        var jiejie_icon = thisScript.findMultiColor('结界突破图标');
+        if (jiejie_icon) {
+            thisScript.regionClick([[jiejie_icon.x + 10, jiejie_icon.y + 10, jiejie_icon.x + 20, jiejie_icon.y + 20, 1000]]);
+            console.log('点击结界突破图标');
+            return false;
+        }
+    }
     if ('个人突破' === thisconfig.type) {
         return thisScript.oper({
             name: '地图进入个人突破',
-            operator: [{
-                    desc: thisOperator[0].desc,
-                    oper: [thisOperator[0].oper[0]]
-                }, thisOperator[1]]
+            operator: [thisOperator[1]]
         });
     }
     else if ('寮突破' === thisconfig.type) {
         return thisScript.oper({
             name: '地图进入寮突破',
-            operator: thisOperator
+            operator: [thisOperator[2], thisOperator[1]]
         });
     }
     return false;
@@ -117576,6 +121187,24 @@ var TaskConfig = {
             oper: [
                 [center, 1280, 720, 1036, 133, 1065, 158, 500]
             ]
+        },
+        {
+            desc: [
+                1280, 720,
+                [
+                    [right, 1201, 131, 0xe9d7d1],
+                    [right, 1114, 97, 0x3f2b20],
+                    [left, 305, 81, 0x3f3d44],
+                    [left, 128, 87, 0x39373e],
+                    [right, 1244, 277, 0x895020],
+                    [right, 1247, 387, 0x523523],
+                    [right, 1245, 438, 0x553623],
+                    [right, 1225, 622, 0xe9dab7],
+                ]
+            ],
+            oper: [
+                [center, 1280, 720, 1210, 366, 1254, 453, 1500]
+            ]
         }
     ],
     '超鬼王开宝箱': [
@@ -120509,6 +124138,80 @@ function doPush(thisScript, options) {
             // 主线程直接返回，不阻塞UI
             return true;
         }
+        else if (storeSettings.push_type == '心跳消息（rabbitmq）') {
+            // 使用RabbitMQ进行推送
+            // 使用线程发送消息，避免阻塞UI
+            threads.start(function () {
+                try {
+                    var script_3 = (__webpack_require__(/*! @/system/script */ "./src/system/script.ts")["default"]);
+                    // 检查RabbitMQ连接状态
+                    var rabbitMQStatus = script_3.getRabbitMQStatus();
+                    if (!rabbitMQStatus.connected) {
+                        console.error('RabbitMQ未连接，停止脚本');
+                        ui.run(function () {
+                            myToast('RabbitMQ未连接，停止脚本');
+                        });
+                        // 等待一会儿让Toast显示完
+                        sleep(2000);
+                        script_3.stop();
+                        return false;
+                    }
+                    var currentTime = new Date().getTime();
+                    // 获取当前推送设置
+                    var storeSettings_1 = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
+                    var deviceId = storeSettings_1.rabbitmq_simulator_id || device.getAndroidId();
+                    var simulatorName = storeSettings_1.rabbitmq_simulator_name || 'unknown_simulator';
+                    var simulatorType = Number(storeSettings_1.rabbitmq_simulator_type) || 0;
+                    // 构建心跳消息
+                    var rabbitMessage = {
+                        routingKey: 'heartbeat',
+                        messageId: "heartbeat-".concat(currentTime, "-").concat(Math.random().toString(36).substring(2, 10)),
+                        content: JSON.stringify({
+                            type: 'message',
+                            timestamp: currentTime,
+                            device_id: device.getAndroidId(),
+                            computer_name: storeSettings_1.computer_name || 'unknown_computer',
+                            message: {
+                                content: options.text || '',
+                                type: options.type || 0,
+                            },
+                            simulator: {
+                                simulator_name: simulatorName,
+                                simulator_type: simulatorType,
+                                id: deviceId
+                            },
+                            text: '普通消息',
+                        })
+                    };
+                    // 发送消息
+                    res_1 = script_3.publishToRabbitMQ(rabbitMessage);
+                    console.log("RabbitMQ\u63A8\u9001".concat(res_1 ? '成功' : '失败'));
+                    // 如果消息发送成功，在UI线程执行后置回调
+                    if (res_1 && options && options.after) {
+                        ui.run(function () {
+                            options.after();
+                        });
+                    }
+                    if (!res_1) {
+                        console.error('心跳消息（rabbitmq）推送失败，停止脚本');
+                        ui.run(function () {
+                            myToast('心跳消息（rabbitmq）推送失败，停止脚本');
+                        });
+                        // 等待一会儿让Toast显示完
+                        sleep(2000);
+                        script_3.stop();
+                        return false;
+                    }
+                    return res_1;
+                }
+                catch (e) {
+                    console.error("RabbitMQ\u63A8\u9001\u5F02\u5E38: ".concat(e));
+                    return false;
+                }
+            });
+            // 主线程直接返回，不阻塞UI
+            return true;
+        }
         // @ts-ignore
         // myToast(`提交推送响应内容：${res.body.string()}`);
         options && options.after && options.after();
@@ -121939,7 +125642,8 @@ var globalRoot = {
     greenFlag: true,
     challenge_null: false,
     rabbitmq_init: false,
-    rabbitmq_simulator_type: ''
+    rabbitmq_simulator_type: '',
+    script_is_running: false
 };
 
 
@@ -122005,7 +125709,6 @@ var initialGlobal = {
     jiejie_created: false,
     find_search_num: 0,
     rabbitmq_first_check: false,
-    script_waiting: false,
     seizing_num: 0,
     app_is_open_flag: 0,
     cg_close: false,
@@ -122018,12 +125721,34 @@ var initialGlobal = {
     create_member_flag: false,
     mingran_check: false,
     zhuti_check: false,
+    team_scene_check: false,
+    team_scene_click: false,
     mingran_click: false,
     zhuti_click: false,
     yucheng_click: 0,
     test_back_num: 0,
     is_doing_plot: false,
-    waiting_quanshen_finish: null, // 初始化为null
+    waiting_quanshen_finish: null,
+    current_member_id: null,
+    approve_company_request: false,
+    is_approving: false,
+    click_zhaohuan: false,
+    exp_buff_inserted: false,
+    tili60_inserted: false,
+    is_joining_company: false,
+    company_approval_completed: false,
+    company_role: 2,
+    friend_index: 0,
+    friend_apply: null,
+    first_friend_wait: true,
+    first_tongxin_wait: true,
+    tili_save: false,
+    shishen_save: false,
+    shishen_save_list: null,
+    tongxin_apply: null,
+    click_enter_times: 0,
+    friends_list: [],
+    share_click_num: 0
 };
 
 
@@ -122938,12 +126663,18 @@ var RabbitMQMessageHandler = /** @class */ (function () {
             var content = JSON.parse(message.content);
             // 根据消息类型处理
             if (message.routingKey === 'command' || content.type === 'command') {
-                // 处理命令消息
+                // 处理命令消息，但不包括update_task
                 this.handleCommandMessage(content);
             }
             else if (message.routingKey === 'task') {
                 // 处理任务消息
+                content.message_type = 'task';
                 this.handleTaskMessage(content);
+            }
+            else if (message.routingKey === 'update_task') {
+                // 处理更新任务消息
+                content.message_type = 'update_task';
+                this.handleUpdateTaskCommand(content);
             }
             else if (message.routingKey === 'change' && content.original_simulator_name === storeSettings.rabbitmq_simulator_name) {
                 // 处理配置变更消息
@@ -122985,10 +126716,14 @@ var RabbitMQMessageHandler = /** @class */ (function () {
             else if (content.command === 'status') {
                 this.handleStatusCommand();
             }
+            else if (content.type === 'company_join_approval') {
+                // 处理阴阳寮加入审批通知
+                this.handleCompanyJoinApproval(content);
+            }
             else {
-                console.log("\u672A\u77E5\u547D\u4EE4: ".concat(content.command));
+                console.log("\u672A\u77E5\u547D\u4EE4: ".concat(content.command || content.type));
                 this.script.doPush(this.script, {
-                    text: "\u6536\u5230\u672A\u77E5\u547D\u4EE4: ".concat(content.command),
+                    text: "\u6536\u5230\u672A\u77E5\u547D\u4EE4: ".concat(content.command || content.type),
                     type: 2
                 });
             }
@@ -123001,6 +126736,31 @@ var RabbitMQMessageHandler = /** @class */ (function () {
             else {
                 console.log('脚本中断，停止处理命令');
             }
+        }
+    };
+    /**
+     * 处理阴阳寮加入审批通知
+     * @param {object} content 消息内容
+     */
+    RabbitMQMessageHandler.prototype.handleCompanyJoinApproval = function (content) {
+        try {
+            if (this.script.initialGlobal.current_member_id === content.president_id) {
+                console.error("\u6536\u5230\u9634\u9633\u5BEE\u52A0\u5165\u5BA1\u6279\u901A\u77E5: \u6210\u5458 ".concat(content.member_name, "(").concat(content.member_id, ") \u7533\u8BF7\u52A0\u5165\u9634\u9633\u5BEE ").concat(content.company_name, "(").concat(content.company_id, ")"));
+                // 发送回执消息
+                this.script.doPush(this.script, {
+                    text: "\u6536\u5230\u9634\u9633\u5BEE\u52A0\u5165\u5BA1\u6279\u901A\u77E5: ".concat(content.member_name, " \u7533\u8BF7\u52A0\u5165 ").concat(content.company_name),
+                    type: 2 // 回执消息
+                });
+                if (!this.script.initialGlobal.is_approving) {
+                    // 将信息存储到全局变量，以便approve_company_member函数使用
+                    this.script.initialGlobal.approve_company_request = true;
+                }
+                // 这里暂时只输出日志，实际处理代码后续再实现
+                console.error('需要在approve_company_member函数中实现对该申请的审批处理');
+            }
+        }
+        catch (e) {
+            console.error("\u5904\u7406\u9634\u9633\u5BEE\u52A0\u5165\u5BA1\u6279\u901A\u77E5\u5F02\u5E38: ".concat(e));
         }
     };
     /**
@@ -123044,10 +126804,6 @@ var RabbitMQMessageHandler = /** @class */ (function () {
                 text: "\u6536\u5230\u4EFB\u52A1: ".concat(JSON.stringify(content)),
                 type: 2 // 回执消息
             });
-            // 如果脚本等待中，则重新运行脚本
-            if (this.script.initialGlobal.script_waiting) {
-                this.script.rerun();
-            }
         }
         catch (e) {
             // 如果是脚本中断异常，不需要记录错误
@@ -123339,6 +127095,68 @@ var RabbitMQMessageHandler = /** @class */ (function () {
             console.error("\u5220\u9664\u961F\u5217\u5F02\u5E38: ".concat(e));
         }
     };
+    /**
+     * 处理更新任务命令
+     * @param content 命令内容
+     */
+    RabbitMQMessageHandler.prototype.handleUpdateTaskCommand = function (content) {
+        try {
+            var storeCommon = (__webpack_require__(/*! @/system/store */ "./src/system/store.ts").storeCommon);
+            var storeSettings = storeCommon.get('settings', {});
+            // 检查设备ID是否匹配
+            if (content.device_id && content.device_id !== storeSettings.rabbitmq_simulator_id) {
+                console.log("\u8BBE\u5907ID\u4E0D\u5339\u914D\uFF0C\u5FFD\u7565");
+                return;
+            }
+            console.log("\u5904\u7406\u66F4\u65B0\u4EFB\u52A1\u6D88\u606F: ".concat(JSON.stringify(content)));
+            if (content.operator) {
+                content.operator = this.script.formatInitialOperate(content.operator);
+            }
+            // 缓存任务消息
+            this.script.addRabbitMQMessageToCache('task', content);
+            // 根据条件合并消息
+            if (this.latestTaskMessage === null) {
+                // 如果以前没有消息，直接创建新消息
+                this.latestTaskMessage = __assign(__assign({}, content), { receivedTimestamp: Date.now() });
+            }
+            else {
+                // 如果已有消息，合并字段
+                // 先添加当前时间戳
+                content.receivedTimestamp = Date.now();
+                // 遍历新消息的所有字段
+                for (var key in content) {
+                    // 更新或添加字段
+                    this.latestTaskMessage[key] = content[key];
+                }
+            }
+            console.log("\u66F4\u65B0\u540E\u7684\u4EFB\u52A1\u4FE1\u606F: ".concat(JSON.stringify(this.latestTaskMessage)));
+            // 发送回执消息
+            this.script.doPush(this.script, {
+                text: "\u6536\u5230\u66F4\u65B0\u4EFB\u52A1\u547D\u4EE4\uFF0C\u5DF2\u66F4\u65B0\u4EFB\u52A1\u4FE1\u606F",
+                type: 2 // 回执消息
+            });
+            // 重置账号相关变量
+            this.script.initialGlobal.isInit = false;
+            this.script.initialGlobal.accountChangeOpen = false;
+            this.script.initialGlobal.findedAccountName = false;
+            this.script.initialGlobal.accountIsSelect = false;
+            this.script.initialGlobal.findAccountCount = 0;
+            this.script.initialGlobal.account_input_flag = false;
+            if (!this.script.global.script_is_running) {
+                console.log('准备重启执行新任务');
+                this.script.rerun();
+            }
+        }
+        catch (e) {
+            // 如果是脚本中断异常，不需要记录错误
+            if (e.toString().indexOf('ScriptInterruptedException') === -1) {
+                console.error("\u5904\u7406\u66F4\u65B0\u4EFB\u52A1\u547D\u4EE4\u5F02\u5E38: ".concat(e));
+            }
+            else {
+                console.log('脚本中断，停止处理更新任务命令');
+            }
+        }
+    };
     return RabbitMQMessageHandler;
 }());
 
@@ -123623,7 +127441,7 @@ var RabbitMQConnector = /** @class */ (function () {
                 console.log("\u73B0\u6709\u7ED1\u5B9A\u6570\u91CF: ".concat(existingBindings.length));
             }
             // 为消费者队列创建绑定，只绑定消费者需要的路由键
-            var consumerRoutingKeys = ['task', 'command', 'change'];
+            var consumerRoutingKeys = ['task', 'command', 'change', 'update_task'];
             for (var _i = 0, consumerRoutingKeys_1 = consumerRoutingKeys; _i < consumerRoutingKeys_1.length; _i++) {
                 var routingKey = consumerRoutingKeys_1[_i];
                 // 检查该路由键是否已存在绑定
@@ -125587,6 +129405,77 @@ var Script = /** @class */ (function () {
                     console.error('RabbitMQ未初始化，消息发送失败');
                 }
             }
+            else if (storeSettings.push_type == '心跳消息（rabbitmq）') {
+                // 使用RabbitMQ进行推送
+                try {
+                    var script_1 = (__webpack_require__(/*! @/system/script */ "./src/system/script.ts")["default"]);
+                    // 检查RabbitMQ连接状态
+                    var rabbitMQStatus = script_1.getRabbitMQStatus();
+                    if (!rabbitMQStatus.connected) {
+                        console.error('RabbitMQ未连接，停止脚本');
+                        ui.run(function () {
+                            (0,_common_toolAuto__WEBPACK_IMPORTED_MODULE_15__.myToast)('RabbitMQ未连接，停止脚本');
+                        });
+                        // 等待一会儿让Toast显示完
+                        sleep(2000);
+                        script_1.stop();
+                        return false;
+                    }
+                    var currentTime = new Date().getTime();
+                    // 获取当前推送设置
+                    var storeSettings_1 = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
+                    var deviceId = storeSettings_1.rabbitmq_simulator_id || device.getAndroidId();
+                    var simulatorName = storeSettings_1.rabbitmq_simulator_name || 'unknown_simulator';
+                    var simulatorType = Number(storeSettings_1.rabbitmq_simulator_type) || 0;
+                    // 构建心跳消息
+                    var rabbitMessage = {
+                        routingKey: 'heartbeat',
+                        messageId: "heartbeat-".concat(currentTime, "-").concat(Math.random().toString(36).substring(2, 10)),
+                        content: JSON.stringify({
+                            type: 'message',
+                            timestamp: currentTime,
+                            device_id: device.getAndroidId(),
+                            computer_name: storeSettings_1.computer_name || 'unknown_computer',
+                            message: {
+                                content: options.text || '',
+                                type: options.type || 0,
+                            },
+                            simulator: {
+                                simulator_name: simulatorName,
+                                simulator_type: simulatorType,
+                                id: deviceId
+                            },
+                            text: '普通消息',
+                        })
+                    };
+                    // 发送消息
+                    var res = script_1.publishToRabbitMQ(rabbitMessage);
+                    console.log("RabbitMQ\u63A8\u9001".concat(res ? '成功' : '失败'));
+                    // 如果消息发送成功，在UI线程执行后置回调
+                    if (res && options && options.after) {
+                        ui.run(function () {
+                            options.after();
+                        });
+                    }
+                    if (!res) {
+                        console.error('心跳消息（rabbitmq）推送失败，停止脚本');
+                        ui.run(function () {
+                            (0,_common_toolAuto__WEBPACK_IMPORTED_MODULE_15__.myToast)('心跳消息（rabbitmq）推送失败，停止脚本');
+                        });
+                        // 等待一会儿让Toast显示完
+                        sleep(2000);
+                        script_1.stop();
+                        return false;
+                    }
+                    return res;
+                }
+                catch (e) {
+                    console.error("RabbitMQ\u63A8\u9001\u5F02\u5E38: ".concat(e));
+                    return false;
+                }
+                // 主线程直接返回，不阻塞UI
+                return true;
+            }
             else if (storeSettings.push_type === 'Socket') {
                 // 处理Socket推送
                 // ... (保持原有代码不变)
@@ -125623,6 +129512,8 @@ var Script = /** @class */ (function () {
         this.rabbitMQMessageHandler = null;
         this.runtimeParams = null;
         this.rabbitMQRunning = false; // 初始化为false，移到最上面
+        this.heartbeatThread = null; // 初始化心跳线程为null
+        this.heartbeatRunning = false; // 初始化心跳状态为false
         this.runTimes = {};
         this.lastFunc = null; // 最后执行成功的funcId
         this.global = (0,_common_tool__WEBPACK_IMPORTED_MODULE_0__.merge)({}, _system_GlobalStore_index__WEBPACK_IMPORTED_MODULE_16__.globalRoot);
@@ -125680,6 +129571,33 @@ var Script = /** @class */ (function () {
                 }
             }
         }
+        else if (storeSettings.push_type === '心跳消息（rabbitmq）') {
+            console.log('当前推送类型为心跳消息(RabbitMQ)，自动初始化连接');
+            // 生成形如 "simulator_xxx" 的名称，其中xxx为随机字符串
+            var randomString = Math.random().toString(36).substring(2, 10);
+            var simulatorName = "simulator_".concat(randomString);
+            _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.put('settings', __assign(__assign({}, storeSettings), { rabbitmq_simulator_name: simulatorName }));
+            console.error(storeSettings.rabbitmq_simulator_name);
+            // 检查模拟器类型是否已设置
+            if (storeSettings.rabbitmq_simulator_type === '未设置' || storeSettings.rabbitmq_simulator_type === '') {
+                console.log('模拟器类型未设置，跳过RabbitMQ初始化');
+                toastLog('请先设置模拟器类型后再使用RabbitMQ功能');
+                this.global.rabbitmq_init = false;
+            }
+            else {
+                // 确保每次应用启动时都尝试重新连接RabbitMQ
+                // 重置标志位，强制重新初始化
+                this.global.rabbitmq_init = false;
+                // 初始化RabbitMQ，如果成功则启动心跳线程
+                if (this.initRabbitMQIfNeeded()) {
+                    // 设置标志位为true
+                    this.rabbitMQRunning = true;
+                    // 不启动RabbitMQ消息接收线程
+                    // 启动心跳线程
+                    this.startHeartbeatThread();
+                }
+            }
+        }
         else {
             console.log('当前推送类型非RabbitMQ，跳过自动初始化');
         }
@@ -125712,6 +129630,35 @@ var Script = /** @class */ (function () {
                         console.log('RabbitMQ连接正常，但消息线程未运行，重新启动线程');
                         _this.rabbitMQRunning = true;
                         _this.startRabbitMQMessageThread();
+                    }
+                }
+                else if (currentSettings.push_type === '心跳消息（rabbitmq）') {
+                    // 首先检查模拟器类型是否已设置
+                    if (currentSettings.rabbitmq_simulator_type === '未设置' || currentSettings.rabbitmq_simulator_type === '') {
+                        console.log('模拟器类型未设置，跳过RabbitMQ重连');
+                        return;
+                    }
+                    // 检查连接是否正常
+                    if (!_this.rabbitMQConnector || !_this.rabbitMQConnector.connected) {
+                        console.log('RabbitMQ连接丢失，尝试重新连接...');
+                        _this.global.rabbitmq_init = false;
+                        if (_this.initRabbitMQIfNeeded()) {
+                            console.log('RabbitMQ重新连接成功');
+                            // 重启心跳线程
+                            if (!_this.heartbeatThread || !_this.heartbeatRunning) {
+                                console.log('重新启动心跳线程');
+                                _this.heartbeatRunning = true;
+                                _this.startHeartbeatThread();
+                            }
+                        }
+                    }
+                    else {
+                        // 连接正常但心跳线程可能未运行
+                        if (!_this.heartbeatThread || !_this.heartbeatRunning) {
+                            console.log('RabbitMQ连接正常，但心跳线程未运行，重新启动心跳线程');
+                            _this.heartbeatRunning = true;
+                            _this.startHeartbeatThread();
+                        }
                     }
                 }
             }
@@ -126282,6 +130229,9 @@ var Script = /** @class */ (function () {
      * @returns
      */
     Script.prototype.run = function () {
+        if (!this.global.script_is_running) {
+            this.global.script_is_running = true;
+        }
         return this._run();
     };
     ;
@@ -126315,8 +130265,8 @@ var Script = /** @class */ (function () {
             }
             // 脚本启动时自动发送状态消息到 RabbitMQ
             try {
-                if (this.rabbitMQConnector && this.rabbitMQConnector.connected) {
-                    var storeSettings = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
+                var storeSettings = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
+                if (this.rabbitMQConnector && this.rabbitMQConnector.connected && storeSettings.push_type == 'RabbitMQ') {
                     var simulatorName = storeSettings.rabbitmq_simulator_name || 'unknown_simulator';
                     var statusMessage = {
                         routingKey: 'status',
@@ -126447,6 +130397,9 @@ var Script = /** @class */ (function () {
      * 停止脚本
      */
     Script.prototype.stop = function () {
+        if (this.global.script_is_running) {
+            this.global.script_is_running = false;
+        }
         events.broadcast.emit('SCRIPT_STOP', '');
     };
     ;
@@ -126466,11 +130419,11 @@ var Script = /** @class */ (function () {
             }
             // 脚本停止时自动发送状态消息到 RabbitMQ
             try {
-                if (this.rabbitMQConnector && this.rabbitMQConnector.connected) {
+                var storeSettings_2 = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
+                if (this.rabbitMQConnector && this.rabbitMQConnector.connected && storeSettings_2.push_type == 'RabbitMQ') {
                     var stopTime = new Date().getTime();
                     var runTimeMs = this.runDate ? (stopTime - this.runDate.getTime()) : 0;
-                    var storeSettings_1 = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
-                    var simulatorName = storeSettings_1.rabbitmq_simulator_name || 'unknown_simulator';
+                    var simulatorName = storeSettings_2.rabbitmq_simulator_name || 'unknown_simulator';
                     var statusMessage = {
                         routingKey: 'status',
                         messageId: "stop-".concat(stopTime, "-").concat(Math.random().toString(36).substring(2, 10)),
@@ -126480,8 +130433,8 @@ var Script = /** @class */ (function () {
                             device_id: device.getAndroidId(),
                             simulator: {
                                 simulator_name: simulatorName,
-                                simulator_type: Number(storeSettings_1.rabbitmq_simulator_type) || 0,
-                                id: storeSettings_1.rabbitmq_simulator_id || device.getAndroidId()
+                                simulator_type: Number(storeSettings_2.rabbitmq_simulator_type) || 0,
+                                id: storeSettings_2.rabbitmq_simulator_id || device.getAndroidId()
                             },
                             text: "\u811A\u672C\u5DF2\u505C\u6B62: ".concat(this.scheme ? this.scheme.schemeName : 'none', ", \u8FD0\u884C\u65F6\u95F4: ").concat(this.formatRunTime(runTimeMs))
                         })
@@ -126773,7 +130726,7 @@ var Script = /** @class */ (function () {
             // 获取当前推送设置
             var storeSettings = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
             // 只有在选择了RabbitMQ推送方式时才初始化
-            if (storeSettings.push_type !== 'RabbitMQ' && !config) {
+            if (storeSettings.push_type !== 'RabbitMQ' && storeSettings.push_type !== '心跳消息（rabbitmq）' && !config) {
                 console.log('当前推送方式不是RabbitMQ，跳过初始化');
                 return false;
             }
@@ -126990,6 +130943,8 @@ var Script = /** @class */ (function () {
         var _this = this;
         // 停止消息接收线程
         this.stopRabbitMQMessageThread();
+        // 停止心跳线程
+        this.stopHeartbeatThread();
         // 在新线程中关闭RabbitMQ连接
         // 以避免潜在的阻塞操作
         threads.start(function () {
@@ -127062,10 +131017,130 @@ var Script = /** @class */ (function () {
         if (!latestMessage) {
             return null;
         }
-        // 获取消息后清空处理器中的任务信息
-        this.rabbitMQMessageHandler.clearTaskMessages();
-        console.log('已获取任务信息并清空处理器中的缓存');
         return latestMessage;
+    };
+    /**
+     * 清除RabbitMQ消息缓存
+     */
+    Script.prototype.clearRabbitMQMessageCache = function () {
+        this.rabbitMQMessageHandler.clearTaskMessages();
+        console.log('已清空处理器中的缓存');
+    };
+    /**
+     * 启动心跳线程，每10秒向RabbitMQ发送一条心跳消息
+     */
+    Script.prototype.startHeartbeatThread = function () {
+        // 避免重复启动线程
+        if (this.heartbeatThread) {
+            console.log('心跳线程已存在，不重复启动');
+            return;
+        }
+        // 确保RabbitMQ已初始化
+        if (!this.rabbitMQConnector || !this.rabbitMQConnector.connected) {
+            console.log('RabbitMQ未初始化或未连接，无法启动心跳线程');
+            return;
+        }
+        console.log('启动RabbitMQ心跳线程');
+        // 设置标志位为true
+        this.heartbeatRunning = true;
+        var self = this;
+        this.heartbeatThread = threads.start(function () {
+            console.log('心跳线程已启动，将每10秒发送一次心跳');
+            while (self.heartbeatRunning) {
+                try {
+                    // 检查RabbitMQ连接状态
+                    if (!self.rabbitMQConnector || !self.rabbitMQConnector.connected) {
+                        console.log('RabbitMQ未连接，心跳无法发送，等待10秒后重试');
+                        // 线程安全地等待
+                        for (var i = 0; i < 10 && self.heartbeatRunning; i++) {
+                            sleep(1000);
+                        }
+                        continue;
+                    }
+                    // 获取当前推送设置
+                    var storeSettings = _system_store__WEBPACK_IMPORTED_MODULE_1__.storeCommon.get('settings', {});
+                    var deviceId = storeSettings.rabbitmq_simulator_id || device.getAndroidId();
+                    var simulatorName = storeSettings.rabbitmq_simulator_name || 'unknown_simulator';
+                    var simulatorType = Number(storeSettings.rabbitmq_simulator_type) || 0;
+                    var currentTime = new Date().getTime();
+                    // 构建心跳消息
+                    var heartbeatMessage = {
+                        routingKey: 'heartbeat',
+                        messageId: "heartbeat-".concat(currentTime, "-").concat(Math.random().toString(36).substring(2, 10)),
+                        content: JSON.stringify({
+                            type: 'heartbeat',
+                            timestamp: currentTime,
+                            device_id: device.getAndroidId(),
+                            computer_name: storeSettings.computer_name || 'unknown_computer',
+                            simulator: {
+                                simulator_name: simulatorName,
+                                simulator_type: simulatorType,
+                                id: deviceId
+                            },
+                            text: '设备心跳',
+                        })
+                    };
+                    // 发送心跳消息
+                    self.publishToRabbitMQ(heartbeatMessage);
+                    console.log("\u5DF2\u53D1\u9001\u5FC3\u8DF3\u6D88\u606F\uFF0C\u5F53\u524D\u65F6\u95F4: ".concat(new Date().toLocaleTimeString()));
+                    // 等待10秒
+                    for (var i = 0; i < 10 && self.heartbeatRunning; i++) {
+                        sleep(1000);
+                    }
+                }
+                catch (e) {
+                    // 只在线程运行时记录异常
+                    if (self.heartbeatRunning) {
+                        console.error("\u5FC3\u8DF3\u7EBF\u7A0B\u5F02\u5E38: ".concat(e));
+                    }
+                    // 出错后等待10秒再继续
+                    for (var i = 0; i < 10 && self.heartbeatRunning; i++) {
+                        sleep(1000);
+                    }
+                }
+            }
+            console.log('心跳线程已安全退出');
+        });
+        console.log('心跳线程已创建: ' + (this.heartbeatThread != null));
+    };
+    /**
+     * 停止心跳线程
+     */
+    Script.prototype.stopHeartbeatThread = function () {
+        var _this = this;
+        console.log('开始停止心跳线程');
+        // 设置标志位为false
+        this.heartbeatRunning = false;
+        if (this.heartbeatThread) {
+            try {
+                // 优雅地等待线程结束
+                console.log('等待心跳线程结束...');
+                // 创建一个计时器，最多等待5秒
+                var waitTime_2 = 0;
+                var checkInterval_2 = setInterval(function () {
+                    waitTime_2 += 500;
+                    // 检查线程是否还在运行
+                    if (!_this.heartbeatThread || !_this.heartbeatThread.isAlive()) {
+                        // 线程已结束，清除计时器和引用
+                        clearInterval(checkInterval_2);
+                        _this.heartbeatThread = null;
+                        console.log('心跳线程已正常结束');
+                    }
+                    else if (waitTime_2 >= 5000) {
+                        // 超过5秒，放弃等待但不强制中断
+                        clearInterval(checkInterval_2);
+                        console.log('心跳线程未在预期时间内结束，但允许其自然结束');
+                    }
+                }, 500);
+            }
+            catch (e) {
+                console.error('停止心跳线程时出错: ' + e);
+            }
+        }
+        else {
+            console.log('心跳线程不存在，无需停止');
+        }
+        console.log('心跳线程停止流程已启动');
     };
     return Script;
 }());
@@ -127731,6 +131806,9 @@ function webviewSettigns() {
     if (typeof initStoreSettings.simulator_name === 'undefined') {
         initStoreSettings.simulator_name = 'simulator_1';
     }
+    if (typeof initStoreSettings.computer_name === 'undefined') {
+        initStoreSettings.computer_name = 'computer_1';
+    }
     if (typeof initStoreSettings.virtual_ip === 'undefined') {
         initStoreSettings.virtual_ip = '10.0.2.16';
     }
@@ -127852,7 +131930,7 @@ function webviewSettigns() {
                 name: 'push_type',
                 type: 'assttyys_setting',
                 stype: 'list',
-                data: ['关闭推送', 'Gotify', 'pushplus', 'ospPush', 'oneBot', '任务服务器', 'RabbitMQ'],
+                data: ['关闭推送', 'Gotify', 'pushplus', 'ospPush', 'oneBot', '任务服务器', 'RabbitMQ', "心跳消息（rabbitmq）"],
                 value: storeSettings.push_type
             }], false);
         if (storeSettings.push_type === 'oneBot') {
@@ -128007,6 +132085,30 @@ function webviewSettigns() {
                 enabled: storeSettings.rabbitmq_close_on_stop === true
             });
         }
+        else if (storeSettings.push_type === '心跳消息（rabbitmq）') {
+            ret.push({
+                desc: '模拟器名称（自动生成，仅做显示）',
+                name: 'rabbitmq_simulator_name',
+                type: 'assttyys_setting',
+                stype: 'text',
+                readonly: true,
+                value: storeSettings.rabbitmq_simulator_name || '未生成'
+            });
+            ret.push({
+                desc: '电脑名称',
+                name: 'computer_name',
+                type: 'assttyys_setting',
+                stype: 'text',
+                value: storeSettings.computer_name
+            });
+            // 添加脚本停止时是否关闭RabbitMQ连接的选项
+            ret.push({
+                desc: '脚本停止时关闭RabbitMQ连接',
+                name: 'rabbitmq_close_on_stop',
+                type: 'assttyys_setting',
+                enabled: storeSettings.rabbitmq_close_on_stop === true
+            });
+        }
         done(ret);
     });
     // 保存配置
@@ -128122,6 +132224,49 @@ function webviewSettigns() {
                 // 不再自动设置默认类型，等待用户选择
                 if (storeSettings.rabbitmq_simulator_type === '未设置' || storeSettings.rabbitmq_simulator_type === '') {
                     toastLog('请选择模拟器类型后再使用RabbitMQ功能');
+                    // 确保将全局标记设置为false，以防止自动初始化
+                    try {
+                        var script = (__webpack_require__(/*! @/system/script */ "./src/system/script.ts")["default"]);
+                        script.global.rabbitmq_init = false;
+                    }
+                    catch (e) {
+                        console.error('设置初始化标记失败: ' + e);
+                    }
+                }
+                else {
+                    // 立即初始化RabbitMQ连接（使用硬编码的配置）
+                    var rabbitMQConfig = {
+                        host: '47.119.42.174',
+                        port: 5672,
+                        username: 'sq-script',
+                        password: '13559365988',
+                        virtualHost: '/',
+                        exchange: 'yys_script_exchange',
+                        queue: "yys_".concat(storeSettings.rabbitmq_simulator_name),
+                        producerQueue: 'yys_server_queue' // 固定的生产者队列名称
+                    };
+                    // 重置标志位，允许重新初始化
+                    var script = (__webpack_require__(/*! @/system/script */ "./src/system/script.ts")["default"]);
+                    script.global.rabbitmq_init = false;
+                    script.global.rabbitmq_simulator_type = storeSettings.rabbitmq_simulator_type; // 设置模拟器类型到全局对象
+                    // 立即初始化RabbitMQ
+                    script.initRabbitMQIfNeeded(rabbitMQConfig);
+                    toastLog('RabbitMQ连接已初始化');
+                }
+            }
+            // 处理推送方式变更为RabbitMQ的情况
+            if (item.name === 'push_type' && item.value === '心跳消息（rabbitmq）') {
+                // 如果是新切换到RabbitMQ，自动生成模拟器名称
+                if (oldPushType !== '心跳消息（rabbitmq）' || !storeSettings.rabbitmq_simulator_name) {
+                    // 生成形如 "simulator_xxx" 的名称，其中xxx为随机字符串
+                    var randomString = Math.random().toString(36).substring(2, 10);
+                    var simulatorName = "simulator_".concat(randomString);
+                    storeSettings.rabbitmq_simulator_name = simulatorName;
+                    toastLog("\u81EA\u52A8\u751F\u6210\u6A21\u62DF\u5668\u540D\u79F0: ".concat(simulatorName));
+                }
+                storeSettings.rabbitmq_simulator_type = 'heartbeat';
+                // 不再自动设置默认类型，等待用户选择
+                if (storeSettings.rabbitmq_simulator_type === '未设置') {
                     // 确保将全局标记设置为false，以防止自动初始化
                     try {
                         var script = (__webpack_require__(/*! @/system/script */ "./src/system/script.ts")["default"]);
